@@ -6,6 +6,8 @@ import Calendar from './pages/Calendar';
 import DayDetails from './pages/DayDetails';
 import AddEntryDialog, { FloatingActionButton } from './components/AddEntryDialog';
 
+const teste = ''
+
 function AppContent() {
   const { user, loading } = useAuth();
   const [mainView, setMainView] = useState<'portfolio' | 'calendar'>('portfolio');
