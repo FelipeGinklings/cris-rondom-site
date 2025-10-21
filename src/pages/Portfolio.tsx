@@ -1,4 +1,4 @@
-import { Calendar as CalendarIcon, Instagram, Facebook } from 'lucide-react';
+import { Instagram, Facebook } from 'lucide-react';
 
 interface PortfolioProps {
   onNavigateToCalendar: () => void;
@@ -23,14 +23,6 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
             <a href="#outros" className="text-sm font-medium hover:opacity-70" style={{ color: 'rgb(100, 53, 34)' }}>
               OUTROS
             </a>
-            <button
-              onClick={onNavigateToCalendar}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: 'rgb(100, 53, 34)' }}
-            >
-              <CalendarIcon className="w-4 h-4" />
-              Calendário
-            </button>
           </nav>
         </div>
       </header>
@@ -162,7 +154,13 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
             </div>
           </div>
           <div className="text-center text-white text-sm opacity-70">
-            Todos os direitos reservados a Esteticista Cris Rondon ©
+            Todos os direitos reservados a Esteticista Cris Rondon © ·{' '}
+            <button
+              onClick={onNavigateToCalendar}
+              className="hover:opacity-70 underline transition-opacity"
+            >
+              Administração
+            </button>
           </div>
         </div>
       </footer>

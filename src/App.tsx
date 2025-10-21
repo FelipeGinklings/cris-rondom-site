@@ -4,12 +4,13 @@ import Portfolio from './pages/Portfolio';
 import Login from './pages/Login';
 import Calendar from './pages/Calendar';
 import DayDetails from './pages/DayDetails';
-import AddEntryDialog, { FloatingActionButton } from './components/AddEntryDialog';
+import AddEntryDialog from './components/AddEntryDialog';
+import Clients from './pages/Clients';
 
 function AppContent() {
   const { user, loading } = useAuth();
   const [mainView, setMainView] = useState<'portfolio' | 'calendar'>('portfolio');
-  const [view, setView] = useState<'calendar' | 'details'>('calendar');
+  const [view, setView] = useState<'calendar' | 'details' | 'clients'>('calendar');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -20,6 +21,14 @@ function AppContent() {
 
   const handleBackToCalendar = () => {
     setView('calendar');
+  };
+
+  const handleViewClients = () => {
+    setView('clients');
+  };
+
+  const handleAddEntry = () => {
+    setIsDialogOpen(true);
   };
 
   const handleNavigateToCalendar = () => {
@@ -53,11 +62,16 @@ function AppContent() {
   return (
     <>
       {view === 'calendar' ? (
-        <Calendar onDateClick={handleDateClick} />
-      ) : (
+        <Calendar
+          onDateClick={handleDateClick}
+          onAddEntry={handleAddEntry}
+          onViewClients={handleViewClients}
+        />
+      ) : view === 'details' ? (
         <DayDetails date={selectedDate} onBack={handleBackToCalendar} />
+      ) : (
+        <Clients onBack={handleBackToCalendar} />
       )}
-      <FloatingActionButton onClick={() => setIsDialogOpen(true)} />
       <AddEntryDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}

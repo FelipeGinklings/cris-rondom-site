@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LogOut, Plus, Users } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, DayEntry } from '../lib/supabase';
 
 interface CalendarProps {
   onDateClick: (date: string) => void;
+  onAddEntry: () => void;
+  onViewClients: () => void;
 }
 
 const colorVariations = [
@@ -17,7 +19,7 @@ const colorVariations = [
   // 'rgb(188, 118, 80)',
 ];
 
-export default function Calendar({ onDateClick }: CalendarProps) {
+export default function Calendar({ onDateClick, onAddEntry, onViewClients }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [entries, setEntries] = useState<DayEntry[]>([]);
   const [animatedDays, setAnimatedDays] = useState<Set<number>>(new Set());
@@ -96,14 +98,32 @@ export default function Calendar({ onDateClick }: CalendarProps) {
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-white">My Calendar</h1>
-          <button
-            onClick={signOut}
-            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg hover:opacity-90 transition-opacity"
-            style={{ color: 'rgb(100, 53, 34)' }}
-          >
-            <LogOut className="w-5 h-5" />
-            Sign Out
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onViewClients}
+              className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg hover:opacity-90 transition-opacity"
+              style={{ color: 'rgb(100, 53, 34)' }}
+            >
+              <Users className="w-5 h-5" />
+              Clientes
+            </button>
+            <button
+              onClick={onAddEntry}
+              className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg hover:opacity-90 transition-opacity"
+              style={{ color: 'rgb(100, 53, 34)' }}
+            >
+              <Plus className="w-5 h-5" />
+              Adicionar
+            </button>
+            <button
+              onClick={signOut}
+              className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg hover:opacity-90 transition-opacity"
+              style={{ color: 'rgb(100, 53, 34)' }}
+            >
+              <LogOut className="w-5 h-5" />
+              Sign Out
+            </button>
+          </div>
         </div>
 
         <div className="bg-white rounded-xl shadow-2xl p-8">
