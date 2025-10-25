@@ -8,6 +8,7 @@ import AddEntryDialog from './components/AddEntryDialog';
 import Clients from './pages/Clients';
 
 function AppContent() {
+  const teste = "teste";
   const { user, loading } = useAuth();
   const [mainView, setMainView] = useState<'portfolio' | 'calendar'>('portfolio');
   const [view, setView] = useState<'calendar' | 'details' | 'clients'>('calendar');
