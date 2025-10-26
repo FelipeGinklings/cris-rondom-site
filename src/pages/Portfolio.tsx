@@ -190,7 +190,9 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
                   </svg>
                 </a>
               </div>
-              <h4 className="text-white font-semibold mb-4 mt-6">Formas de pagamento</h4>
+              <h4 className="text-white font-semibold mb-4 mt-6">
+                Formas de pagamento
+              </h4>
               <div className="flex gap-4">
                 <div className="w-12 h-8 bg-white rounded flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" style={{ color: colors.texto.escuro }}
