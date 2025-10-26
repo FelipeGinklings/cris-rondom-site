@@ -42,7 +42,7 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
               className="text-sm font-medium hover:opacity-70"
               style={{ color: colors.texto.escuro }}
             >
-              OUTROS
+              PROMOÇÕES
             </a>
           </nav>
         </div>
@@ -77,7 +77,7 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
                 >
                   <div className="w-60 h-60 bg-white rounded-full">
                   <img
-                    src="/assets/images/perfil.png"
+                    src="/../public/assets/perfil.png"
                     alt="Cris Rondon"
                     className="w-full h-full rounded-full object-cover"
                   />
@@ -96,8 +96,14 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
             >
               Quem é Cris Rondon?
             </h3>
-            <p className="text-lg text-gray-700 leading-relaxed">
-              Esteticista formada em Estética e Cosmetologia (...)
+            <p className="text-xl text-gray-700 leading-relaxed mb-4">
+              Esteticista formada em Estética e Cosmetologia pela Unicesumar, com diversos cursos de especialização em massagem modeladora, massagem relaxante, drenagem linfática, microagulhamento, detox corporal, peeling químico, dermaplaning, limpeza de pele, banho de lua, pedras quentes e escalda pés.
+            </p>
+            <p className="text-xl text-gray-700 leading-relaxed mb-4">
+              Trabalho com cuidado individual, levando em consideração as necessidades específicas de cada cliente. Minha paixão pelo que faço e a interação com minhas clientes tornam cada atendimento especial e personalizado.
+            </p>
+            <p className="text-xl text-gray-700 leading-relaxed">
+              Com feedbacks positivos e uma abordagem humanizada, ofereço tratamentos que proporcionam bem-estar e resultados efetivos no conforto da sua casa.
             </p>
             <div className="mt-8 flex justify-center">
               <div
@@ -107,7 +113,7 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
                 }}
               >
                 <img
-                  src="/assets/images/about.png"
+                  src="/../public/assets/about.png"
                   alt="Cris Rondon"
                   className="w-full h-full rounded-full object-cover"
                 />
@@ -253,7 +259,7 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
               className="text-4xl font-bold mb-8"
               style={{ color: colors.texto.escuro }}
             >
-              Outros
+              Promoções
             </h3>
             <p className="text-lg text-gray-700">
               Mais informações sobre serviços adicionais e diferenciais.
