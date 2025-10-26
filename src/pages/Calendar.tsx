@@ -81,8 +81,8 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
     onDateClick(dateStr);
   };
 
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
 
   const getColorForDay = (day: number) => {
     return colorVariations[day % colorVariations.length];
@@ -121,7 +121,7 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
               style={{ color: 'rgb(100, 53, 34)' }}
             >
               <LogOut className="w-5 h-5" />
-              Sign Out
+              Sair
             </button>
           </div>
         </div>
