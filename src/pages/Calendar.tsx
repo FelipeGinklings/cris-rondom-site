@@ -97,7 +97,7 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
     >
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-white">My Calendar</h1>
+          <h1 className="text-4xl font-bold text-white">Meu Calendário</h1>
           <div className="flex items-center gap-3">
             <button
               onClick={onViewClients}
