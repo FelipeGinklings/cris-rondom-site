@@ -56,7 +56,7 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold" style={{ color: 'rgb(100, 53, 34)' }}>
-            Add New Entry
+            Adicionar Nova Entrada
           </h2>
           <button
             onClick={onClose}
@@ -150,7 +150,7 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
               className="flex-1 px-6 py-3 border-2 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
               style={{ borderColor: 'rgb(193, 124, 85)', color: 'rgb(100, 53, 34)' }}
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
@@ -158,7 +158,7 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
               className="flex-1 px-6 py-3 rounded-lg text-white font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: 'rgb(100, 53, 34)' }}
             >
-              {loading ? 'Saving...' : 'Save Entry'}
+              {loading ? 'Salvando...' : 'Salvar Entrada'}
             </button>
           </div>
         </form>
