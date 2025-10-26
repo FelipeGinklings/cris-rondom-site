@@ -61,7 +61,7 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
               color: colors.tonsEscuros.escuro
             }}
           >
-            Add New Entry
+            Adicionar Nova Entrada
           </h2>
           <button
             onClick={onClose}
@@ -170,7 +170,7 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
                 color: colors.tonsEscuros.escuro
               }}
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
@@ -180,7 +180,7 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
                 backgroundColor: colors.tonsEscuros.escuro 
               }}
             >
-              {loading ? 'Saving...' : 'Save Entry'}
+              {loading ? 'Salvando...' : 'Salvar Entrada'}
             </button>
           </div>
         </form>

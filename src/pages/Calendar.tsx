@@ -76,8 +76,8 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
     onDateClick(dateStr);
   };
 
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
 
   const getColorForDay = (day: number) => {
     return colorVariations[day % colorVariations.length];
@@ -97,7 +97,7 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
             style={{ 
               color: colors.texto.claro
             }}
-          >My Calendar</h1>
+          >Meu Calendário</h1>
           <div className="flex items-center gap-3">
             <button
               onClick={onViewClients}
@@ -130,7 +130,7 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
               }}
             >
               <LogOut className="w-5 h-5" />
-              Sign Out
+              Sair
             </button>
           </div>
         </div>

@@ -62,7 +62,7 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this entry?')) {
+    if (confirm('Tem certeza que deseja deletar essa entrada?')) {
       const { error } = await supabase
         .from('day_entries')
         .delete()
@@ -96,7 +96,7 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
           className="flex items-center gap-2 mb-6 text-white hover:opacity-80 transition-opacity"
         >
           <ArrowLeft className="w-6 h-6" />
-          <span className="text-lg font-semibold">Back to Calendar</span>
+          <span className="text-lg font-semibold">Voltar para o Calendário</span>
         </button>
 
         <div className="bg-white rounded-xl shadow-2xl p-8">
@@ -116,11 +116,11 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
           </div>
 
           {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading...</div>
+            <div className="text-center py-12 text-gray-500">Carregando...</div>
           ) : entries.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No entries for this day yet.</p>
-              <p className="text-gray-400 mt-2">Click the + button to add one!</p>
+              <p className="text-gray-500 text-lg">Sem entradas para esse dia ainda.</p>
+              <p className="text-gray-400 mt-2">Aperte o botão + para adicionar uma!</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -185,7 +185,7 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
                             backgroundColor: colors.tonsEscuros.escuro
                           }}
                         >
-                          Save
+                          Salvar
                         </button>
                         <button
                           onClick={handleCancelEdit}
@@ -195,7 +195,7 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
                             color: colors.tonsEscuros.escuro
                           }}
                         >
-                          Cancel
+                          Cancelar
                         </button>
                       </div>
                     </div>
@@ -207,7 +207,7 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
                             color: colors.tonsEscuros.escuro
                           }}
                         >
-                          {entry.title || 'Untitled Entry'}
+                          {entry.title || 'Entrada sem Título'}
                         </h2>
                         <div className="flex items-center gap-3">
                           <div className="flex items-center gap-2 text-gray-500 text-sm">
