@@ -9,8 +9,12 @@ import Clients from './pages/Clients';
 
 function AppContent() {
   const { user, loading } = useAuth();
-  const [mainView, setMainView] = useState<'portfolio' | 'calendar'>('portfolio');
-  const [view, setView] = useState<'calendar' | 'details' | 'clients'>('calendar');
+  const [mainView, setMainView] = useState<'portfolio' | 'calendar'>(
+    'portfolio'
+  );
+  const [view, setView] = useState<'calendar' | 'details' | 'clients'>(
+    'calendar'
+  );
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -45,7 +49,10 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'rgb(193, 124, 85)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: 'rgb(193, 124, 85)' }}
+      >
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
@@ -56,7 +63,7 @@ function AppContent() {
   }
 
   if (!user) {
-    return <Login />;
+    return <Login goBackCallback={() => setMainView('portfolio')} />;
   }
 
   return (
