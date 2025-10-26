@@ -68,16 +68,22 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
                   }}
                 ></div>
               </div>
-              <div className="flex justify-center">
+                <div className="flex justify-center">
                 <div
                   className="w-64 h-64 rounded-full flex items-center justify-center"
                   style={{
-                    background: colors.portfolioGradiente.circuloGradiente,
+                  background: colors.portfolioGradiente.gradienteSuaveClaro,
                   }}
                 >
-                  <div className="w-56 h-56 bg-white rounded-full"></div>
+                  <div className="w-60 h-60 bg-white rounded-full">
+                  <img
+                    src="/assets/images/perfil.png"
+                    alt="Cris Rondon"
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                  </div>
                 </div>
-              </div>
+                </div>
             </div>
           </div>
         </section>
@@ -103,7 +109,13 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
                 style={{
                   background: colors.portfolioGradiente.gradienteCompleto,
                 }}
-              ></div>
+              >
+                <img
+                  src="/assets/images/about.png"
+                  alt="Cris Rondon"
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -261,7 +273,9 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-row items-center justify-center gap-10 mb-10">
             <div className="text-center">
-              <h2 className="text-white font-semibold mb-4 text-lg">Redes sociais</h2>
+              <h2 className="text-white font-semibold mb-4 text-lg">
+                Redes sociais
+              </h2>
               <div className="flex gap-4 justify-center">
                 <a
                   href="https://www.instagram.com/esteticistacrisrondon/"
