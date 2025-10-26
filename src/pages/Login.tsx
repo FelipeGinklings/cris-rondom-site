@@ -37,7 +37,6 @@ export default function Login({
     <div
       className="min-h-screen flex items-center justify-center"
       style={{
-        // background: 'linear-gradient(135deg, rgb(178, 108, 72) 0%, rgb(193, 124, 85) 25%, rgb(205, 140, 100) 50%, rgb(193, 124, 85) 75%, rgb(185, 115, 78) 100%)'
         background: colors.gradiente.principal,
       }}
     >
