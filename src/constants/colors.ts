@@ -41,6 +41,19 @@ const colors = {
         media: "rgba(0, 0, 0, 0.2)",
         intensa: "rgba(0, 0, 0, 0.4)",
     },
+
+    cardColorPortfolio: {
+        bgClaro: "#E6D2C3",
+        bgBege: "#DCC3AF",
+        banner: "#F0E1D2",
+    },
+
+    portfolioGradiente: {
+        barraGradiente: "linear-gradient(90deg, #C17C55, #CD8C64, #C17C55)",
+        circuloGradiente: "linear-gradient(135deg, #C17C55, #CD8C64)",
+        gradienteCompleto: "linear-gradient(135deg, #B26C48, #C17C55, #CD8C64)",
+    }
+
 };
 
 export default colors;
