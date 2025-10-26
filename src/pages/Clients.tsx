@@ -3,6 +3,7 @@ import { ArrowLeft, User, Phone, Mail, Calendar, Plus, MapPin, Cake, Edit2, Tras
 import { supabase } from '../lib/supabase';
 import AddClientDialog from '../components/AddClientDialog';
 import EditClientDialog from '../components/EditClientDialog';
+import colors from '../constants/colors';
 
 interface ClientsProps {
   onBack: () => void;
@@ -104,7 +105,7 @@ export default function Clients({ onBack }: ClientsProps) {
     <div
       className="min-h-screen p-8"
       style={{
-        background: 'linear-gradient(135deg, rgb(178, 108, 72) 0%, rgb(193, 124, 85) 25%, rgb(205, 140, 100) 50%, rgb(193, 124, 85) 75%, rgb(185, 115, 78) 100%)'
+        background: colors.gradiente.suave
       }}
     >
       <div className="max-w-6xl mx-auto">
@@ -112,18 +113,30 @@ export default function Clients({ onBack }: ClientsProps) {
           <div className="flex items-center gap-4">
             <button
               onClick={onBack}
-              className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg hover:opacity-90 transition-opacity"
-              style={{ color: 'rgb(100, 53, 34)' }}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+              style={{ 
+                backgroundColor: colors.texto.claro,
+                color: colors.tonsEscuros.escuro
+              }}
             >
               <ArrowLeft className="w-5 h-5" />
               Voltar
             </button>
-            <h1 className="text-4xl font-bold text-white">Clientes</h1>
+            <h1 
+              className="text-4xl font-bold"
+              style={{
+                color: colors.texto.claro
+              }}
+            
+            >Clientes</h1>
           </div>
           <button
             onClick={() => setIsDialogOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg hover:opacity-90 transition-opacity"
-            style={{ color: 'rgb(100, 53, 34)' }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+            style={{ 
+              backgroundColor: colors.texto.claro,
+              color: colors.tonsEscuros.escuro
+            }}
           >
             <Plus className="w-5 h-5" />
             Adicionar Cliente
@@ -133,13 +146,29 @@ export default function Clients({ onBack }: ClientsProps) {
         <div className="bg-white rounded-xl shadow-2xl p-8">
           {loading ? (
             <div className="text-center py-12">
-              <p className="text-xl" style={{ color: 'rgb(100, 53, 34)' }}>Carregando...</p>
+              <p className="text-xl" 
+                style={{ 
+                  color: colors.tonsEscuros.escuro
+                  }}
+              >Carregando...</p>
             </div>
           ) : clients.length === 0 ? (
             <div className="text-center py-12">
-              <User className="w-16 h-16 mx-auto mb-4 opacity-30" style={{ color: 'rgb(100, 53, 34)' }} />
-              <p className="text-xl" style={{ color: 'rgb(100, 53, 34)' }}>Nenhum cliente encontrado</p>
-              <p className="text-sm text-gray-500 mt-2">Clique em "Adicionar Cliente" para começar</p>
+              <User className="w-16 h-16 mx-auto mb-4 opacity-30" 
+                style={{ 
+                  color: colors.tonsEscuros.escuro
+                }} 
+              />
+              <p className="text-xl" 
+                style={{ 
+                  color: colors.tonsEscuros.escuro
+                }}
+              >Nenhum cliente encontrado</p>
+              <p className="text-sm text-gray-500 mt-2"
+                style={{ 
+                  color: colors.texto.secundario
+                }}
+              >Clique em "Adicionar Cliente" para começar</p>
             </div>
           ) : (
             <div className="grid gap-4">
@@ -147,13 +176,23 @@ export default function Clients({ onBack }: ClientsProps) {
                 <div
                   key={client.id}
                   className="border rounded-lg p-6 hover:shadow-lg transition-shadow"
-                  style={{ borderColor: 'rgb(193, 124, 85)' }}
+                  style={{ 
+                    borderColor: colors.background.terciario
+                  }}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-3">
-                        <User className="w-6 h-6" style={{ color: 'rgb(100, 53, 34)' }} />
-                        <h3 className="text-xl font-semibold" style={{ color: 'rgb(100, 53, 34)' }}>
+                        <User className="w-6 h-6" 
+                          style={{ 
+                            color: colors.tonsEscuros.escuro
+                            }} 
+                        />
+                        <h3 className="text-xl font-semibold" 
+                          style={{ 
+                            color: colors.tonsEscuros.escuro
+                            }}
+                          >
                           {client.name}
                         </h3>
                       </div>
@@ -194,7 +233,9 @@ export default function Clients({ onBack }: ClientsProps) {
                       <div className="text-right">
                         <div
                           className="text-3xl font-bold"
-                          style={{ color: 'rgb(100, 53, 34)' }}
+                          style={{ 
+                            color: colors.tonsEscuros.escuro
+                          }}
                         >
                           {client.total_entries}
                         </div>
@@ -206,15 +247,22 @@ export default function Clients({ onBack }: ClientsProps) {
                         <button
                           onClick={() => handleEdit(client)}
                           className="p-2 border rounded-lg hover:bg-gray-50 transition-colors"
-                          style={{ borderColor: 'rgb(193, 124, 85)', color: 'rgb(100, 53, 34)' }}
+                          style={{ 
+                            borderColor: colors.background.terciario,
+                            color: colors.tonsEscuros.escuro
+                          }}
                           title="Editar cliente"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(client)}
-                          className="p-2 border border-red-300 rounded-lg hover:bg-red-50 transition-colors text-red-600"
+                          className="p-2 border rounded-lg hover:bg-red-50 transition-colors"
                           title="Excluir cliente"
+                          style={{ 
+                            borderColor: colors.background.terciario, 
+                            color: colors.texto.chamativo
+                          }}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

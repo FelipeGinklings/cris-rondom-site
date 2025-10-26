@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Smile, Calendar as CalendarIcon, Clock, Edit2, Trash2 } from 'lucide-react';
 import { supabase, DayEntry } from '../lib/supabase';
+import colors from '../constants/colors';
 
 interface DayDetailsProps {
   date: string;
@@ -86,7 +87,7 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
     <div
       className="min-h-screen p-8"
       style={{
-        background: 'linear-gradient(135deg, rgb(178, 108, 72) 0%, rgb(193, 124, 85) 25%, rgb(205, 140, 100) 50%, rgb(193, 124, 85) 75%, rgb(185, 115, 78) 100%)'
+        background: colors.gradiente.suave
       }}
     >
       <div className="max-w-4xl mx-auto">
@@ -100,8 +101,16 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
 
         <div className="bg-white rounded-xl shadow-2xl p-8">
           <div className="flex items-center gap-3 mb-8">
-            <CalendarIcon className="w-8 h-8" style={{ color: 'rgb(100, 53, 34)' }} />
-            <h1 className="text-3xl font-bold" style={{ color: 'rgb(100, 53, 34)' }}>
+            <CalendarIcon className="w-8 h-8" 
+              style={{ 
+                color: colors.tonsEscuros.escuro
+              }}
+            />
+            <h1 className="text-3xl font-bold" 
+              style={{ 
+                color: colors.tonsEscuros.escuro
+              }}
+            >
               {formatDate(date)}
             </h1>
           </div>
@@ -119,7 +128,9 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
                 <div
                   key={entry.id}
                   className="border-l-4 pl-6 py-4 relative"
-                  style={{ borderColor: 'rgb(100, 53, 34)' }}
+                  style={{ 
+                    borderColor: colors.tonsEscuros.escuro
+                  }}
                 >
                   {editingId === entry.id ? (
                     <div className="space-y-4">
@@ -128,14 +139,20 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
                         value={editForm.title}
                         onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
                         placeholder="Title"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none"
-                        style={{ '--tw-ring-color': 'rgb(193, 124, 85)' } as any}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
+                        style={{
+                          '--tw-ring-color': colors.background.terciario, 
+                          borderColor: colors.background.terciario
+                        } as any}
                       />
                       <select
                         value={editForm.mood}
                         onChange={(e) => setEditForm({ ...editForm, mood: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none"
-                        style={{ '--tw-ring-color': 'rgb(193, 124, 85)' } as any}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
+                        style={{
+                          '--tw-ring-color': colors.background.terciario, 
+                          borderColor: colors.background.terciario
+                        } as any}
                       >
                         <option value="">Select a mood...</option>
                         <option value="Happy">Happy</option>
@@ -154,21 +171,29 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
                         onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                         placeholder="Description"
                         rows={4}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none resize-none"
-                        style={{ '--tw-ring-color': 'rgb(193, 124, 85)' } as any}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none resize-none"
+                        style={{
+                          '--tw-ring-color': colors.background.terciario, 
+                          borderColor: colors.background.terciario
+                        } as any}
                       />
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleSaveEdit(entry.id)}
                           className="px-4 py-2 rounded-lg text-white font-semibold hover:opacity-90"
-                          style={{ backgroundColor: 'rgb(100, 53, 34)' }}
+                          style={{ 
+                            backgroundColor: colors.tonsEscuros.escuro
+                          }}
                         >
                           Salvar
                         </button>
                         <button
                           onClick={handleCancelEdit}
                           className="px-4 py-2 rounded-lg border-2 font-semibold hover:bg-gray-50"
-                          style={{ borderColor: 'rgb(193, 124, 85)', color: 'rgb(100, 53, 34)' }}
+                          style={{ 
+                            borderColor: colors.background.terciario, 
+                            color: colors.tonsEscuros.escuro
+                          }}
                         >
                           Cancelar
                         </button>
@@ -177,7 +202,11 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
                   ) : (
                     <>
                       <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-2xl font-semibold" style={{ color: 'rgb(100, 53, 34)' }}>
+                        <h2 className="text-2xl font-semibold" 
+                          style={{ 
+                            color: colors.tonsEscuros.escuro
+                          }}
+                        >
                           {entry.title || 'Entrada sem Título'}
                         </h2>
                         <div className="flex items-center gap-3">
@@ -188,7 +217,9 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
                           <button
                             onClick={() => handleEdit(entry)}
                             className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                            style={{ color: 'rgb(193, 124, 85)' }}
+                            style={{ 
+                              color: colors.background.terciario, 
+                            }}
                           >
                             <Edit2 className="w-5 h-5" />
                           </button>
@@ -203,7 +234,11 @@ export default function DayDetails({ date, onBack }: DayDetailsProps) {
 
                       {entry.mood && (
                         <div className="flex items-center gap-2 mb-3">
-                          <Smile className="w-5 h-5" style={{ color: 'rgb(193, 124, 85)' }} />
+                          <Smile className="w-5 h-5" 
+                            style={{ 
+                              color: colors.background.terciario, 
+                            }}
+                          />
                           <span className="text-gray-700 font-medium">Mood: {entry.mood}</span>
                         </div>
                       )}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Plus } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import colors from '../constants/colors';
 
 interface AddEntryDialogProps {
   isOpen: boolean;
@@ -55,7 +56,11 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold" style={{ color: 'rgb(100, 53, 34)' }}>
+          <h2 className="text-2xl font-bold" 
+            style={{ 
+              color: colors.tonsEscuros.escuro
+            }}
+          >
             Adicionar Nova Entrada
           </h2>
           <button
@@ -83,8 +88,11 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none"
-              style={{ '--tw-ring-color': 'rgb(193, 124, 85)' } as any}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
+              style={{ 
+                '--tw-ring-color': colors.background.terciario,
+                borderColor: colors.background.terciario
+              } as any}
             />
           </div>
 
@@ -98,8 +106,11 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Give your entry a title..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none"
-              style={{ '--tw-ring-color': 'rgb(193, 124, 85)' } as any}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
+              style={{ 
+                '--tw-ring-color': colors.background.terciario,
+                borderColor: colors.background.terciario
+              } as any}
             />
           </div>
 
@@ -111,8 +122,11 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
               id="mood"
               value={mood}
               onChange={(e) => setMood(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none"
-              style={{ '--tw-ring-color': 'rgb(193, 124, 85)' } as any}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
+              style={{ 
+                '--tw-ring-color': colors.background.terciario,
+                borderColor: colors.background.terciario
+              } as any}
             >
               <option value="">Select a mood...</option>
               <option value="Happy">Happy</option>
@@ -138,8 +152,11 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
               onChange={(e) => setDescription(e.target.value)}
               placeholder="What happened today? Share your thoughts, experiences, or reflections..."
               rows={6}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none resize-none"
-              style={{ '--tw-ring-color': 'rgb(193, 124, 85)' } as any}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none resize-none"
+              style={{ 
+                '--tw-ring-color': colors.background.terciario, 
+                borderColor: colors.background.terciario
+              } as any}
             />
           </div>
 
@@ -148,7 +165,10 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
               type="button"
               onClick={onClose}
               className="flex-1 px-6 py-3 border-2 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-              style={{ borderColor: 'rgb(193, 124, 85)', color: 'rgb(100, 53, 34)' }}
+              style={{ 
+                borderColor: colors.background.terciario, 
+                color: colors.tonsEscuros.escuro
+              }}
             >
               Cancelar
             </button>
@@ -156,7 +176,9 @@ export default function AddEntryDialog({ isOpen, onClose, onSuccess, initialDate
               type="submit"
               disabled={loading}
               className="flex-1 px-6 py-3 rounded-lg text-white font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{ backgroundColor: 'rgb(100, 53, 34)' }}
+              style={{ 
+                backgroundColor: colors.tonsEscuros.escuro 
+              }}
             >
               {loading ? 'Salvando...' : 'Salvar Entrada'}
             </button>
@@ -172,7 +194,9 @@ export function FloatingActionButton({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       className="fixed bottom-8 right-8 w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-40"
-      style={{ backgroundColor: 'rgb(100, 53, 34)' }}
+      style={{ 
+        backgroundColor: colors.tonsEscuros.escuro 
+      }}
     >
       <Plus className="w-8 h-8 text-white" />
     </button>

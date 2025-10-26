@@ -88,11 +88,7 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
           </div>
         </section>
 
-        <section
-          id="quem-e"
-          className="py-20 px-6"
-          style={{ backgroundColor: 'rgb(250, 245, 240)' }}
-        >
+        <section id="quem-e" className="py-20 px-6" style={{ backgroundColor: 'rgb(250, 245, 240)' }}>
           <div className="max-w-5xl mx-auto text-center">
             <h3
               className="text-4xl font-bold mb-6"

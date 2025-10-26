@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import colors from '../constants/colors';
 
 interface AddClientDialogProps {
   isOpen: boolean;
@@ -71,15 +72,25 @@ export default function AddClientDialog({ isOpen, onClose, onSuccess }: AddClien
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        style={{ 
+          backgroundColor: colors.texto.claro
+        }}
+      >
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold" style={{ color: 'rgb(100, 53, 34)' }}>
+          <h2 className="text-2xl font-bold" 
+          style={{ 
+            color: colors.tonsEscuros.escuro
+          }}
+          >
             Adicionar Cliente
           </h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            style={{ color: 'rgb(100, 53, 34)' }}
+            style={{
+              color: colors.tonsEscuros.escuro
+            }}
           >
             <X className="w-6 h-6" />
           </button>
@@ -87,7 +98,11 @@ export default function AddClientDialog({ isOpen, onClose, onSuccess }: AddClien
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(100, 53, 34)' }}>
+            <label className="block text-sm font-medium mb-2" 
+              style={{
+                color: colors.tonsEscuros.escuro
+              }}
+            >
               Nome *
             </label>
             <input
@@ -97,13 +112,19 @@ export default function AddClientDialog({ isOpen, onClose, onSuccess }: AddClien
               onChange={handleChange}
               required
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2"
-              style={{ borderColor: 'rgb(193, 124, 85)' }}
+              style={{ 
+                borderColor: colors.background.terciario
+              }}
               placeholder="Nome completo do cliente"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(100, 53, 34)' }}>
+            <label className="block text-sm font-medium mb-2" 
+              style={{
+                color: colors.tonsEscuros.escuro
+              }}
+            >
               Telefone
             </label>
             <input
@@ -112,13 +133,19 @@ export default function AddClientDialog({ isOpen, onClose, onSuccess }: AddClien
               value={formData.phone}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2"
-              style={{ borderColor: 'rgb(193, 124, 85)' }}
+              style={{ 
+                borderColor: colors.background.terciario
+              }}
               placeholder="(00) 00000-0000"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(100, 53, 34)' }}>
+            <label className="block text-sm font-medium mb-2" 
+              style={{
+                color: colors.tonsEscuros.escuro
+              }}
+            >
               Email
             </label>
             <input
@@ -127,13 +154,19 @@ export default function AddClientDialog({ isOpen, onClose, onSuccess }: AddClien
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2"
-              style={{ borderColor: 'rgb(193, 124, 85)' }}
+              style={{ 
+                borderColor: colors.background.terciario
+              }}
               placeholder="email@exemplo.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(100, 53, 34)' }}>
+            <label className="block text-sm font-medium mb-2" 
+              style={{
+                color: colors.tonsEscuros.escuro
+              }}
+            >
               Data de Nascimento
             </label>
             <input
@@ -142,12 +175,18 @@ export default function AddClientDialog({ isOpen, onClose, onSuccess }: AddClien
               value={formData.birth_date}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2"
-              style={{ borderColor: 'rgb(193, 124, 85)' }}
+              style={{ 
+                borderColor: colors.background.terciario
+              }}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(100, 53, 34)' }}>
+            <label className="block text-sm font-medium mb-2" 
+            style={{ 
+              color: colors.tonsEscuros.escuro
+              }}
+            >
               Endereço
             </label>
             <textarea
@@ -156,7 +195,9 @@ export default function AddClientDialog({ isOpen, onClose, onSuccess }: AddClien
               onChange={handleChange}
               rows={3}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2"
-              style={{ borderColor: 'rgb(193, 124, 85)' }}
+              style={{ 
+                borderColor: colors.background.terciario
+              }}
               placeholder="Endereço completo"
             />
           </div>
@@ -165,8 +206,11 @@ export default function AddClientDialog({ isOpen, onClose, onSuccess }: AddClien
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 border rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-              style={{ borderColor: 'rgb(193, 124, 85)', color: 'rgb(100, 53, 34)' }}
+              className="flex-1 px-6 py-3 border-2 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              style={{ 
+                borderColor: colors.background.terciario, 
+                color: colors.tonsEscuros.escuro
+              }}
             >
               Cancelar
             </button>
@@ -174,7 +218,9 @@ export default function AddClientDialog({ isOpen, onClose, onSuccess }: AddClien
               type="submit"
               disabled={isSubmitting}
               className="flex-1 px-6 py-3 rounded-lg font-semibold text-white hover:opacity-90 transition-opacity disabled:opacity-50"
-              style={{ backgroundColor: 'rgb(100, 53, 34)' }}
+              style={{ 
+                backgroundColor: colors.tonsEscuros.escuro 
+              }}
             >
               {isSubmitting ? 'Salvando...' : 'Adicionar Cliente'}
             </button>

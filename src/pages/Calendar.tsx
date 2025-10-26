@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, LogOut, Plus, Users } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, DayEntry } from '../lib/supabase';
+import colors from '../constants/colors';
 
 interface CalendarProps {
   onDateClick: (date: string) => void;
@@ -10,13 +11,7 @@ interface CalendarProps {
 }
 
 const colorVariations = [
-  'rgb(193, 124, 85)',
-  // 'rgb(200, 135, 95)',
-  // 'rgb(185, 115, 78)',
-  // 'rgb(205, 140, 100)',
-  // 'rgb(178, 108, 72)',
-  // 'rgb(195, 128, 88)',
-  // 'rgb(188, 118, 80)',
+    colors.background.terciario
 ];
 
 export default function Calendar({ onDateClick, onAddEntry, onViewClients }: CalendarProps) {
@@ -92,33 +87,47 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
     <div
       className="min-h-screen p-8"
       style={{
-        background: 'linear-gradient(135deg, rgb(178, 108, 72) 0%, rgb(193, 124, 85) 25%, rgb(205, 140, 100) 50%, rgb(193, 124, 85) 75%, rgb(185, 115, 78) 100%)'
+        background: colors.gradiente.suave
       }}
     >
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-white">Meu Calendário</h1>
+          <h1 
+            className="text-4xl font-bold"
+            style={{ 
+              color: colors.texto.claro
+            }}
+          >Meu Calendário</h1>
           <div className="flex items-center gap-3">
             <button
               onClick={onViewClients}
-              className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg hover:opacity-90 transition-opacity"
-              style={{ color: 'rgb(100, 53, 34)' }}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+              style={{ 
+                backgroundColor: colors.texto.claro,
+                color: colors.tonsEscuros.escuro
+              }}
             >
               <Users className="w-5 h-5" />
               Clientes
             </button>
             <button
               onClick={onAddEntry}
-              className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg hover:opacity-90 transition-opacity"
-              style={{ color: 'rgb(100, 53, 34)' }}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+              style={{ 
+                backgroundColor: colors.texto.claro,
+                color: colors.tonsEscuros.escuro
+              }}
             >
               <Plus className="w-5 h-5" />
               Adicionar
             </button>
             <button
               onClick={signOut}
-              className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg hover:opacity-90 transition-opacity"
-              style={{ color: 'rgb(100, 53, 34)' }}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+              style={{ 
+                backgroundColor: colors.texto.claro,
+                color: colors.tonsEscuros.escuro
+              }}
             >
               <LogOut className="w-5 h-5" />
               Sair
@@ -126,22 +135,35 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-2xl p-8">
+        <div className="rounded-xl shadow-2xl p-8"
+          style={{ 
+            backgroundColor: colors.texto.claro
+          }}
+        >
           <div className="flex items-center justify-between mb-8">
             <button
               onClick={previousMonth}
               className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              style={{ color: 'rgb(100, 53, 34)' }}
+              style={{ 
+                color: colors.tonsEscuros.escuro
+              }}
             >
               <ChevronLeft className="w-8 h-8" />
             </button>
-            <h2 className="text-3xl font-bold" style={{ color: 'rgb(100, 53, 34)' }}>
+            <h2 
+              className="text-3xl font-bold" 
+              style={{ 
+                color: colors.tonsEscuros.escuro
+              }}
+            >
               {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
             </h2>
             <button
               onClick={nextMonth}
               className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              style={{ color: 'rgb(100, 53, 34)' }}
+              style={{ 
+                color: colors.tonsEscuros.escuro
+              }}
             >
               <ChevronRight className="w-8 h-8" />
             </button>
@@ -149,7 +171,11 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
 
           <div className="grid grid-cols-7 gap-4 mb-4">
             {dayNames.map(day => (
-              <div key={day} className="text-center font-semibold text-gray-600 py-2">
+              <div key={day} className="text-center font-semibold py-2"
+                style={{ 
+                  color: colors.tonsEscuros.medio
+                }}
+              >
                 {day}
               </div>
             ))}
@@ -170,10 +196,10 @@ export default function Calendar({ onDateClick, onAddEntry, onViewClients }: Cal
                   className="aspect-square rounded-lg flex items-center justify-center text-xl font-semibold transition-all hover:scale-105 hover:shadow-lg relative overflow-hidden"
                   style={{
                     backgroundColor: getColorForDay(day),
-                    color: 'white',
+                    color: colors.texto.claro,
                     border: '4px solid transparent',
                     backgroundImage: hasData
-                      ? `linear-gradient(${getColorForDay(day)}, ${getColorForDay(day)}), linear-gradient(135deg, rgb(100, 53, 34), rgb(150, 80, 50), rgb(100, 53, 34), rgb(120, 65, 40))`
+                      ? `linear-gradient(${getColorForDay(day)}, ${getColorForDay(day)}), linear-gradient(135deg, ${colors.texto.escuro}, ${colors.tonsEscuros.medio}, ${colors.texto.destaque})`
                       : 'none',
                     backgroundOrigin: 'border-box',
                     backgroundClip: 'padding-box, border-box',
