@@ -77,7 +77,7 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
                 >
                   <div className="w-60 h-60 bg-white rounded-full">
                   <img
-                    src="/../public/assets/perfil.png"
+                    src="/assets/perfil.png"
                     alt="Cris Rondon"
                     className="w-full h-full rounded-full object-cover"
                   />
@@ -113,7 +113,7 @@ export default function Portfolio({ onNavigateToCalendar }: PortfolioProps) {
                 }}
               >
                 <img
-                  src="/../public/assets/about.png"
+                  src="/assets/about.png"
                   alt="Cris Rondon"
                   className="w-full h-full rounded-full object-cover"
                 />
