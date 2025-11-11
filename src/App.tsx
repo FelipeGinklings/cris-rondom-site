@@ -6,6 +6,7 @@ import Calendar from './pages/Calendar';
 import DayDetails from './pages/DayDetails';
 import AddEntryDialog from './components/AddEntryDialog';
 import Clients from './pages/Clients';
+import Testes from './components/Testes';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -59,6 +60,7 @@ function AppContent() {
   }
 
   if (mainView === 'portfolio') {
+    // return <Testes />
     return <Portfolio onNavigateToCalendar={handleNavigateToCalendar} />;
   }
 
