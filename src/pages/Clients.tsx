@@ -308,9 +308,14 @@ export default function Clients() {
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    onClick={() =>
-                                                        handleDelete(client)
-                                                    }
+                                                    onClick={() => {
+                                                        setClientToDelete(
+                                                            client
+                                                        );
+                                                        setShowConfirmDialog(
+                                                            true
+                                                        );
+                                                    }}
                                                     className="p-2 border rounded-lg hover:bg-red-50 transition-colors"
                                                     title="Excluir cliente"
                                                     style={{
