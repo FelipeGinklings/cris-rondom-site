@@ -1,102 +1,75 @@
-import { useState } from 'react';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import Portfolio from './pages/Portfolio';
-import Login from './pages/Login';
+import {
+    BrowserRouter,
+    Navigate,
+    Route,
+    Routes,
+    useNavigate,
+} from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 import Calendar from './pages/Calendar';
-import DayDetails from './pages/DayDetails';
-import AddEntryDialog from './components/AddEntryDialog';
 import Clients from './pages/Clients';
-import Testes from './components/Testes';
+import DayDetails from './pages/DayDetails';
+import Login from './pages/Login';
+import Portfolio from './pages/Portfolio';
+import { useEffect } from 'react';
+import { useAuth } from './hooks/useAuth';
 
-function AppContent() {
-  const { user, loading } = useAuth();
-  const [mainView, setMainView] = useState<'portfolio' | 'calendar'>(
-    'portfolio'
-  );
-  const [view, setView] = useState<'calendar' | 'details' | 'clients'>(
-    'calendar'
-  );
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+const LoginPage = () => {
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
-  const handleDateClick = (date: string) => {
-    setSelectedDate(date);
-    setView('details');
-  };
+    useEffect(() => {
+        if (user) navigate('/calendar');
+    }, [navigate, user]);
 
-  const handleBackToCalendar = () => {
-    setView('calendar');
-  };
+    return <Login />;
+};
 
-  const handleViewClients = () => {
-    setView('clients');
-  };
+const ProtectedRoutes = () => {
+    const { user, loading } = useAuth();
+    if (loading) return <p>Carregando...</p>;
+    if (!user) return <Navigate to="/home" replace />;
 
-  const handleAddEntry = () => {
-    setIsDialogOpen(true);
-  };
+    return <AppRoutes />;
+};
 
-  const handleNavigateToCalendar = () => {
-    setMainView('calendar');
-  };
+function AppRoutes() {
+    const { user, loading } = useAuth();
+    if (!user) return <Login />;
 
-  const handleDialogSuccess = () => {
-    if (view === 'calendar') {
-      window.location.reload();
-    } else {
-      window.location.reload();
+    if (loading) {
+        return (
+            <div
+                className="min-h-screen flex items-center justify-center"
+                style={{ backgroundColor: 'rgb(193, 124, 85)' }}
+            >
+                <div className="text-white text-xl">Carregando...</div>
+            </div>
+        );
     }
-  };
 
-  if (loading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: 'rgb(193, 124, 85)' }}
-      >
-        <div className="text-white text-xl">Loading...</div>
-      </div>
+        <Routes>
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/calendar/:id" element={<DayDetails />} />
+            <Route path="/clients" element={<Clients />} />
+            {/* <Route path="/templates" element={<Dashboard />} /> */}
+        </Routes>
     );
-  }
-
-  if (mainView === 'portfolio') {
-    // return <Testes />
-    return <Portfolio onNavigateToCalendar={handleNavigateToCalendar} />;
-  }
-
-  if (!user) {
-    return <Login goBackCallback={() => setMainView('portfolio')} />;
-  }
-
-  return (
-    <>
-      {view === 'calendar' ? (
-        <Calendar
-          onDateClick={handleDateClick}
-          onAddEntry={handleAddEntry}
-          onViewClients={handleViewClients}
-        />
-      ) : view === 'details' ? (
-        <DayDetails date={selectedDate} onBack={handleBackToCalendar} />
-      ) : (
-        <Clients onBack={handleBackToCalendar} />
-      )}
-      <AddEntryDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onSuccess={handleDialogSuccess}
-        initialDate={view === 'details' ? selectedDate : undefined}
-      />
-    </>
-  );
 }
 
 function App() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/home" element={<Portfolio />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/*" element={<ProtectedRoutes />} />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
+    );
 }
 
 export default App;
