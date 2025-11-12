@@ -15,6 +15,7 @@ import { supabase } from '../lib/supabase';
 import AddClientDialog from '../components/AddClientDialog';
 import EditClientDialog from '../components/EditClientDialog';
 import colors from '../constants/colors';
+import ConfirmDialog from '../components/PopUp';
 import useNavigation from '../hooks/useNavigation';
 
 interface Client {
@@ -34,6 +35,8 @@ export default function Clients() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+    const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const { navigate } = useNavigation();
 
     useEffect(() => {
@@ -91,10 +94,6 @@ export default function Clients() {
     };
 
     const handleDelete = async (client: Client) => {
-        if (!confirm(`Tem certeza que deseja excluir ${client.name}?`)) {
-            return;
-        }
-
         try {
             const { error } = await supabase
                 .from('clients')
@@ -109,9 +108,11 @@ export default function Clients() {
             alert('Erro ao excluir cliente. Tente novamente.');
         }
     };
+
     const navigateBackToCalendarHandler = () => {
         navigate('/calendar');
     };
+
     return (
         <div
             className="min-h-screen p-8"
@@ -307,9 +308,14 @@ export default function Clients() {
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    onClick={() =>
-                                                        handleDelete(client)
-                                                    }
+                                                    onClick={() => {
+                                                        setClientToDelete(
+                                                            client
+                                                        );
+                                                        setShowConfirmDialog(
+                                                            true
+                                                        );
+                                                    }}
                                                     className="p-2 border rounded-lg hover:bg-red-50 transition-colors"
                                                     title="Excluir cliente"
                                                     style={{
@@ -345,6 +351,22 @@ export default function Clients() {
                 onSuccess={loadClients}
                 client={selectedClient}
             />
+            {clientToDelete && (
+                <ConfirmDialog
+                    isVisible={showConfirmDialog}
+                    title="Excluir cliente?"
+                    message={`Tem certeza que deseja excluir ${clientToDelete.name}?`}
+                    onConfirm={() => {
+                        handleDelete(clientToDelete);
+                        setClientToDelete(null);
+                        setShowConfirmDialog(false);
+                    }}
+                    onCancel={() => {
+                        setClientToDelete(null);
+                        setShowConfirmDialog(false);
+                    }}
+                />
+            )}
         </div>
     );
 }
