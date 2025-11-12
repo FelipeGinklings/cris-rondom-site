@@ -9,6 +9,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import colors from '../constants/colors';
+import ConfirmDialog from '../components/PopUp';
 import { DayEntry, supabase } from '../lib/supabase';
 import useNavigation from '../hooks/useNavigation';
 
@@ -22,6 +23,8 @@ export default function DayDetails() {
         description: '',
         mood: '',
     });
+    const [entryToDelete, setEntryToDelete] = useState<DayEntry | null>(null);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const { navigate } = useNavigation();
 
     const loadEntries = useCallback(async () => {
@@ -67,16 +70,18 @@ export default function DayDetails() {
         setEditForm({ title: '', description: '', mood: '' });
     };
 
-    const handleDelete = async (id: string) => {
-        if (confirm('Tem certeza que deseja deletar essa entrada?')) {
+    const handleDelete = async (entry: DayEntry) => {
+        try {
             const { error } = await supabase
                 .from('day_entries')
                 .delete()
-                .eq('id', id);
+                .eq('id', entry.id);
 
-            if (!error) {
-                loadEntries();
-            }
+            if (error) throw error;
+            await loadEntries();
+        } catch (error) {
+            console.error('Erro ao excluir entrada:', error);
+            alert('Erro ao excluir entrada. Tente novamente.');
         }
     };
 
@@ -328,11 +333,14 @@ export default function DayDetails() {
                                                         <Edit2 className="w-5 h-5" />
                                                     </button>
                                                     <button
-                                                        onClick={() =>
-                                                            handleDelete(
-                                                                entry.id
-                                                            )
-                                                        }
+                                                        onClick={() => {
+                                                            setEntryToDelete(
+                                                                entry
+                                                            );
+                                                            setShowConfirmDialog(
+                                                                true
+                                                            );
+                                                        }}
                                                         className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-600"
                                                     >
                                                         <Trash2 className="w-5 h-5" />
@@ -369,6 +377,24 @@ export default function DayDetails() {
                     )}
                 </div>
             </div>
+            {entryToDelete && (
+                <ConfirmDialog
+                    isVisible={showConfirmDialog}
+                    title="Excluir entrada?"
+                    message={`Tem certeza que deseja excluir "${
+                        entryToDelete.title || 'essa entrada'
+                    }"?`}
+                    onConfirm={() => {
+                        handleDelete(entryToDelete);
+                        setEntryToDelete(null);
+                        setShowConfirmDialog(false);
+                    }}
+                    onCancel={() => {
+                        setEntryToDelete(null);
+                        setShowConfirmDialog(false);
+                    }}
+                />
+            )}
         </div>
     );
 }
