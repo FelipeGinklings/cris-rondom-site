@@ -1,11 +1,11 @@
 import { Instagram } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import colors from '../constants/colors';
 import { WhatsAppPath } from '../constants/whatsAppPath';
 import { useAuth } from '../hooks/useAuth';
+import useNavigation from '../hooks/useNavigation';
 
 export default function Portfolio() {
-    const navigate = useNavigate();
+    const { navigate } = useNavigation();
     const { user } = useAuth();
     const navigateToLoginHandler = () => {
         if (user) navigate('/calendar');

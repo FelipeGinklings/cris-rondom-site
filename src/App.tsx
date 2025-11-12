@@ -16,7 +16,7 @@ import { useAuth } from './hooks/useAuth';
 
 const LoginPage = () => {
     const { user } = useAuth();
-    const navigate = useNavigate();
+    const { navigate } = useNavigation();
 
     useEffect(() => {
         if (user) navigate('/calendar');
@@ -51,7 +51,7 @@ function AppRoutes() {
     return (
         <Routes>
             <Route path="/calendar" element={<Calendar />} />
-            <Route path="/calendar/:id" element={<DayDetails />} />
+            <Route path="/calendar/:date" element={<DayDetails />} />
             <Route path="/clients" element={<Clients />} />
             {/* <Route path="/templates" element={<Dashboard />} /> */}
         </Routes>

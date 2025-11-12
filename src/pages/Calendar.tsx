@@ -1,22 +1,33 @@
 import { ChevronLeft, ChevronRight, LogOut, Plus, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import AddEntryDialog from '../components/AddEntryDialog';
 import colors from '../constants/colors';
-import { DayEntry, supabase } from '../lib/supabase';
 import { useAuth } from '../hooks/useAuth';
+import useNavigation from '../hooks/useNavigation';
+import { DayEntry, supabase } from '../lib/supabase';
 
 const colorVariations = [colors.background.terciario];
 
 export default function Calendar() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [entries, setEntries] = useState<DayEntry[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
     const [animatedDays, setAnimatedDays] = useState<Set<number>>(new Set());
     const { signOut } = useAuth();
+    const { navigate } = useNavigation();
 
-    useEffect(() => {
-        loadEntries();
+    const getDaysInMonth = useCallback(() => {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDayOfWeek = firstDay.getDay();
+
+        return { daysInMonth, startingDayOfWeek };
     }, [currentDate]);
 
-    const loadEntries = async () => {
+    const loadEntries = useCallback(async () => {
         setAnimatedDays(new Set());
         const startOfMonth = new Date(
             currentDate.getFullYear(),
@@ -43,18 +54,7 @@ export default function Calendar() {
                 setAnimatedDays(prev => new Set([...prev, i]));
             }, i * 30);
         }
-    };
-
-    const getDaysInMonth = () => {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const firstDay = new Date(year, month, 1);
-        const lastDay = new Date(year, month + 1, 0);
-        const daysInMonth = lastDay.getDate();
-        const startingDayOfWeek = firstDay.getDay();
-
-        return { daysInMonth, startingDayOfWeek };
-    };
+    }, [currentDate, getDaysInMonth]);
 
     const { daysInMonth, startingDayOfWeek } = getDaysInMonth();
 
@@ -78,11 +78,10 @@ export default function Calendar() {
     };
 
     const handleDayClick = (day: number) => {
-        console.log(day);
-        // const dateStr = `${currentDate.getFullYear()}-${String(
-        //     currentDate.getMonth() + 1
-        // ).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        // onDateClick(dateStr);
+        const dateStr = `${currentDate.getFullYear()}-${String(
+            currentDate.getMonth() + 1
+        ).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        navigate(`/calendar/${dateStr}`);
     };
 
     const monthNames = [
@@ -105,6 +104,14 @@ export default function Calendar() {
         return colorVariations[day % colorVariations.length];
     };
 
+    const navigateToClientsHandler = () => {
+        navigate('/clients');
+    };
+
+    useEffect(() => {
+        loadEntries();
+    }, [currentDate, loadEntries]);
+
     return (
         <div
             className="min-h-screen p-8"
@@ -112,12 +119,12 @@ export default function Calendar() {
                 background: colors.gradiente.suave,
             }}
         >
-            {/* <AddEntryDialog
-                isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
-                onSuccess={handleDialogSuccess}
-                initialDate={view === 'details' ? selectedDate : undefined}
-            /> */}
+            <AddEntryDialog
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                onSuccess={() => {}}
+                initialDate={'2025-11-12'}
+            />
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1
@@ -130,7 +137,7 @@ export default function Calendar() {
                     </h1>
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={() => {}} // onViewClients
+                            onClick={navigateToClientsHandler}
                             className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                             style={{
                                 backgroundColor: colors.texto.claro,
@@ -141,7 +148,7 @@ export default function Calendar() {
                             Clientes
                         </button>
                         <button
-                            onClick={() => {}} // addEntry
+                            onClick={() => setIsOpen(true)}
                             className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                             style={{
                                 backgroundColor: colors.texto.claro,

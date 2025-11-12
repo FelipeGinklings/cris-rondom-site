@@ -1,16 +1,19 @@
-import { useState, useEffect } from 'react';
 import {
     ArrowLeft,
-    Smile,
     Calendar as CalendarIcon,
     Clock,
     Edit2,
+    Smile,
     Trash2,
 } from 'lucide-react';
-import { supabase, DayEntry } from '../lib/supabase';
+import { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import colors from '../constants/colors';
+import { DayEntry, supabase } from '../lib/supabase';
+import useNavigation from '../hooks/useNavigation';
 
 export default function DayDetails() {
+    const { date } = useParams() as { date: string };
     const [entries, setEntries] = useState<DayEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -19,12 +22,9 @@ export default function DayDetails() {
         description: '',
         mood: '',
     });
+    const { navigate } = useNavigation();
 
-    useEffect(() => {
-        loadEntries();
-    }, [date]);
-
-    const loadEntries = async () => {
+    const loadEntries = useCallback(async () => {
         setLoading(true);
         const { data } = await supabase
             .from('day_entries')
@@ -34,7 +34,7 @@ export default function DayDetails() {
 
         setEntries(data || []);
         setLoading(false);
-    };
+    }, [date]);
 
     const handleEdit = (entry: DayEntry) => {
         setEditingId(entry.id);
@@ -97,6 +97,14 @@ export default function DayDetails() {
         });
     };
 
+    const navigateBackToCalendarHandler = () => {
+        navigate('/calendar');
+    };
+
+    useEffect(() => {
+        loadEntries();
+    }, [date, loadEntries]);
+
     return (
         <div
             className="min-h-screen p-8"
@@ -106,7 +114,7 @@ export default function DayDetails() {
         >
             <div className="max-w-4xl mx-auto">
                 <button
-                    onClick={onBack}
+                    onClick={navigateBackToCalendarHandler}
                     className="flex items-center gap-2 mb-6 text-white hover:opacity-80 transition-opacity"
                 >
                     <ArrowLeft className="w-6 h-6" />
@@ -177,7 +185,7 @@ export default function DayDetails() {
                                                         borderColor:
                                                             colors.background
                                                                 .terciario,
-                                                    } as any
+                                                    } as never
                                                 }
                                             />
                                             <select
@@ -197,7 +205,7 @@ export default function DayDetails() {
                                                         borderColor:
                                                             colors.background
                                                                 .terciario,
-                                                    } as any
+                                                    } as never
                                                 }
                                             >
                                                 <option value="">
@@ -254,7 +262,7 @@ export default function DayDetails() {
                                                         borderColor:
                                                             colors.background
                                                                 .terciario,
-                                                    } as any
+                                                    } as never
                                                 }
                                             />
                                             <div className="flex gap-2">

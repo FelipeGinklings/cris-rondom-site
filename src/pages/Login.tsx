@@ -1,8 +1,8 @@
 import { ArrowLeft, Calendar } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import colors from '../constants/colors';
 import { useAuth } from '../hooks/useAuth';
+import useNavigation from '../hooks/useNavigation';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -10,7 +10,7 @@ export default function Login() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { signIn } = useAuth();
-    const navigate = useNavigate();
+    const { navigate } = useNavigation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

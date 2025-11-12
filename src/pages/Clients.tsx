@@ -15,6 +15,7 @@ import { supabase } from '../lib/supabase';
 import AddClientDialog from '../components/AddClientDialog';
 import EditClientDialog from '../components/EditClientDialog';
 import colors from '../constants/colors';
+import useNavigation from '../hooks/useNavigation';
 
 interface Client {
     id: string;
@@ -33,6 +34,7 @@ export default function Clients() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+    const { navigate } = useNavigation();
 
     useEffect(() => {
         loadClients();
@@ -107,7 +109,9 @@ export default function Clients() {
             alert('Erro ao excluir cliente. Tente novamente.');
         }
     };
-
+    const navigateBackToCalendarHandler = () => {
+        navigate('/calendar');
+    };
     return (
         <div
             className="min-h-screen p-8"
@@ -119,7 +123,7 @@ export default function Clients() {
                 <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-4">
                         <button
-                            onClick={onBack}
+                            onClick={navigateBackToCalendarHandler}
                             className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                             style={{
                                 backgroundColor: colors.texto.claro,
