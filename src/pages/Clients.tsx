@@ -120,6 +120,36 @@ export default function Clients() {
                 background: colors.gradiente.suave,
             }}
         >
+            <AddClientDialog
+                isOpen={isDialogOpen}
+                onClose={() => setIsDialogOpen(false)}
+                onSuccess={loadClients}
+            />
+            <EditClientDialog
+                isOpen={isEditDialogOpen}
+                onClose={() => {
+                    setIsEditDialogOpen(false);
+                    setSelectedClient(null);
+                }}
+                onSuccess={loadClients}
+                client={selectedClient}
+            />
+            {clientToDelete && (
+                <ConfirmDialog
+                    isVisible={showConfirmDialog}
+                    title="Excluir cliente?"
+                    message={`Tem certeza que deseja excluir ${clientToDelete.name}?`}
+                    onConfirm={() => {
+                        handleDelete(clientToDelete);
+                        setClientToDelete(null);
+                        setShowConfirmDialog(false);
+                    }}
+                    onCancel={() => {
+                        setClientToDelete(null);
+                        setShowConfirmDialog(false);
+                    }}
+                />
+            )}
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-4">
@@ -337,36 +367,6 @@ export default function Clients() {
                     )}
                 </div>
             </div>
-            <AddClientDialog
-                isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
-                onSuccess={loadClients}
-            />
-            <EditClientDialog
-                isOpen={isEditDialogOpen}
-                onClose={() => {
-                    setIsEditDialogOpen(false);
-                    setSelectedClient(null);
-                }}
-                onSuccess={loadClients}
-                client={selectedClient}
-            />
-            {clientToDelete && (
-                <ConfirmDialog
-                    isVisible={showConfirmDialog}
-                    title="Excluir cliente?"
-                    message={`Tem certeza que deseja excluir ${clientToDelete.name}?`}
-                    onConfirm={() => {
-                        handleDelete(clientToDelete);
-                        setClientToDelete(null);
-                        setShowConfirmDialog(false);
-                    }}
-                    onCancel={() => {
-                        setClientToDelete(null);
-                        setShowConfirmDialog(false);
-                    }}
-                />
-            )}
         </div>
     );
 }

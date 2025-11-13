@@ -117,6 +117,24 @@ export default function DayDetails() {
                 background: colors.gradiente.suave,
             }}
         >
+            {entryToDelete && (
+                <ConfirmDialog
+                    isVisible={showConfirmDialog}
+                    title="Excluir entrada?"
+                    message={`Tem certeza que deseja excluir "${
+                        entryToDelete.title || 'essa entrada'
+                    }"?`}
+                    onConfirm={() => {
+                        handleDelete(entryToDelete);
+                        setEntryToDelete(null);
+                        setShowConfirmDialog(false);
+                    }}
+                    onCancel={() => {
+                        setEntryToDelete(null);
+                        setShowConfirmDialog(false);
+                    }}
+                />
+            )}
             <div className="max-w-4xl mx-auto">
                 <button
                     onClick={navigateBackToCalendarHandler}
@@ -377,24 +395,6 @@ export default function DayDetails() {
                     )}
                 </div>
             </div>
-            {entryToDelete && (
-                <ConfirmDialog
-                    isVisible={showConfirmDialog}
-                    title="Excluir entrada?"
-                    message={`Tem certeza que deseja excluir "${
-                        entryToDelete.title || 'essa entrada'
-                    }"?`}
-                    onConfirm={() => {
-                        handleDelete(entryToDelete);
-                        setEntryToDelete(null);
-                        setShowConfirmDialog(false);
-                    }}
-                    onCancel={() => {
-                        setEntryToDelete(null);
-                        setShowConfirmDialog(false);
-                    }}
-                />
-            )}
         </div>
     );
 }
