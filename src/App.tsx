@@ -1,18 +1,13 @@
-import {
-    BrowserRouter,
-    Navigate,
-    Route,
-    Routes,
-    useNavigate,
-} from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Calendar from './pages/Calendar';
 import Clients from './pages/Clients';
 import DayDetails from './pages/DayDetails';
 import Login from './pages/Login';
-import Portfolio from './pages/Portfolio';
 import { useEffect } from 'react';
 import { useAuth } from './hooks/useAuth';
+import useNavigation from './hooks/useNavigation';
+import Home from './pages/Home';
 
 const LoginPage = () => {
     const { user } = useAuth();
@@ -26,8 +21,7 @@ const LoginPage = () => {
 };
 
 const ProtectedRoutes = () => {
-    const { user, loading } = useAuth();
-    if (loading) return <p>Carregando...</p>;
+    const { user } = useAuth();
     if (!user) return <Navigate to="/home" replace />;
 
     return <AppRoutes />;
@@ -53,7 +47,7 @@ function AppRoutes() {
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/calendar/:date" element={<DayDetails />} />
             <Route path="/clients" element={<Clients />} />
-            {/* <Route path="/templates" element={<Dashboard />} /> */}
+            {/* <Route path="/templates" element={<Template />} /> */}
         </Routes>
     );
 }
@@ -63,7 +57,7 @@ function App() {
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/home" element={<Portfolio />} />
+                    <Route path="/home" element={<Home />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/*" element={<ProtectedRoutes />} />
                 </Routes>
