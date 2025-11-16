@@ -132,7 +132,7 @@ export default function Calendar() {
                             color: colors.texto.claro,
                         }}
                     >
-                        Meu Calendário
+                        Cris Rondon
                     </h1>
                     <div className="flex items-center gap-3">
                         <button
