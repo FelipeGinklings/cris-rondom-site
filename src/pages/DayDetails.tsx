@@ -13,7 +13,7 @@ import colors from '../constants/colors';
 import ConfirmDialog from '../components/PopUp';
 import { DayEntry, supabase } from '../lib/supabase';
 import useNavigation from '../hooks/useNavigation';
-import AddEntryDialog from "../components/AddEntryDialog";
+import AddEntryDialog from '../components/AddEntryDialog';
 
 export default function DayDetails() {
     const params = useParams();
@@ -161,7 +161,7 @@ export default function DayDetails() {
                         onClick={() => setIsAddOpen(true)}
                         className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                         style={{
-                        backgroundColor: colors.texto.claro,
+                            backgroundColor: colors.texto.claro,
                             color: colors.tonsEscuros.escuro,
                         }}
                     >
