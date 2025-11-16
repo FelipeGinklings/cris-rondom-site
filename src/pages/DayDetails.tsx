@@ -166,7 +166,7 @@ export default function DayDetails() {
                         }}
                     >
                         <Plus className="w-5 h-5" />
-                        Adicionar
+                        Agendar Consulta
                     </button>
                 </div>
 
