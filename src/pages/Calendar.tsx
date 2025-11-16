@@ -156,7 +156,7 @@ export default function Calendar() {
                             }}
                         >
                             <Plus className="w-5 h-5" />
-                            Adicionar
+                            Agendar Consulta
                         </button>
                         <button
                             onClick={signOut}
