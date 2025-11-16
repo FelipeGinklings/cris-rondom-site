@@ -123,7 +123,6 @@ export default function Calendar() {
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
                 onSuccess={() => {}}
-                initialDate={'2025-11-12'}
             />
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-8">

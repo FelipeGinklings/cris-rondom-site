@@ -5,6 +5,7 @@ import {
     Edit2,
     Smile,
     Trash2,
+    Plus,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -12,9 +13,11 @@ import colors from '../constants/colors';
 import ConfirmDialog from '../components/PopUp';
 import { DayEntry, supabase } from '../lib/supabase';
 import useNavigation from '../hooks/useNavigation';
+import AddEntryDialog from '../components/AddEntryDialog';
 
 export default function DayDetails() {
-    const { date } = useParams() as { date: string };
+    const params = useParams();
+    const date = params.date as string;
     const [entries, setEntries] = useState<DayEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -26,6 +29,7 @@ export default function DayDetails() {
     const [entryToDelete, setEntryToDelete] = useState<DayEntry | null>(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const { navigate } = useNavigation();
+    const [isAddOpen, setIsAddOpen] = useState(false);
 
     const loadEntries = useCallback(async () => {
         setLoading(true);
@@ -117,6 +121,12 @@ export default function DayDetails() {
                 background: colors.gradiente.suave,
             }}
         >
+            <AddEntryDialog
+                isOpen={isAddOpen}
+                onClose={() => setIsAddOpen(false)}
+                onSuccess={loadEntries}
+                initialDate={date}
+            />
             {entryToDelete && (
                 <ConfirmDialog
                     isVisible={showConfirmDialog}
@@ -136,15 +146,29 @@ export default function DayDetails() {
                 />
             )}
             <div className="max-w-4xl mx-auto">
-                <button
-                    onClick={navigateBackToCalendarHandler}
-                    className="flex items-center gap-2 mb-6 text-white hover:opacity-80 transition-opacity"
-                >
-                    <ArrowLeft className="w-6 h-6" />
-                    <span className="text-lg font-semibold">
-                        Voltar para o Calendário
-                    </span>
-                </button>
+                <div className="flex justify-between items-center mb-8">
+                    <button
+                        onClick={navigateBackToCalendarHandler}
+                        className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
+                    >
+                        <ArrowLeft className="w-6 h-6" />
+                        <span className="text-lg font-semibold">
+                            Voltar para o Calendário
+                        </span>
+                    </button>
+
+                    <button
+                        onClick={() => setIsAddOpen(true)}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                        style={{
+                            backgroundColor: colors.texto.claro,
+                            color: colors.tonsEscuros.escuro,
+                        }}
+                    >
+                        <Plus className="w-5 h-5" />
+                        Adicionar
+                    </button>
+                </div>
 
                 <div className="bg-white rounded-xl shadow-2xl p-8">
                     <div className="flex items-center gap-3 mb-8">

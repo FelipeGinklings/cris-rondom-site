@@ -29,6 +29,16 @@ export default function AddEntryDialog({
 
     if (!isOpen) return null;
 
+    const formatDate = (dateStr: string) => {
+        const d = new Date(dateStr + "T00:00:00");
+
+        const dia = String(d.getDate()).padStart(2, "0");
+        const mes = String(d.getMonth() + 1).padStart(2, "0");
+        const ano = d.getFullYear();
+
+        return `${dia}/${mes}/${ano}`;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -71,7 +81,7 @@ export default function AddEntryDialog({
                             color: colors.tonsEscuros.escuro,
                         }}
                     >
-                        Adicionar Nova Entrada
+                        Adicionar nova entrada em {formatDate(date)}
                     </h2>
                     <button
                         onClick={onClose}
