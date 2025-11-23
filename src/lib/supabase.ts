@@ -9,9 +9,10 @@ export interface DayEntry {
   id: string;
   user_id: string;
   date: string;
-  title: string;
-  description: string;
-  mood: string;
+  name: string;
+  phone: string;
+  notas: string;
+  service: string;
   created_at: string;
   updated_at: string;
 }

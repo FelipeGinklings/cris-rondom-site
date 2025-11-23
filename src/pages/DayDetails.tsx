@@ -5,6 +5,7 @@ import {
     Edit2,
     Smile,
     Trash2,
+    Phone,
     Plus,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -22,9 +23,10 @@ export default function DayDetails() {
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editForm, setEditForm] = useState({
-        title: '',
-        description: '',
-        mood: '',
+        name: '',
+        phone: '',
+        notas: '',
+        service: '',
     });
     const [entryToDelete, setEntryToDelete] = useState<DayEntry | null>(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -46,19 +48,21 @@ export default function DayDetails() {
     const handleEdit = (entry: DayEntry) => {
         setEditingId(entry.id);
         setEditForm({
-            title: entry.title,
-            description: entry.description,
-            mood: entry.mood,
+            name: entry.name,
+            phone: entry.phone,
+            notas: entry.notas,
+            service: entry.service,
         });
     };
 
     const handleSaveEdit = async (id: string) => {
         const { error } = await supabase
             .from('day_entries')
-            .update({
-                title: editForm.title,
-                description: editForm.description,
-                mood: editForm.mood,
+                .update({
+                name: editForm.name,
+                phone: editForm.phone,
+                notas: editForm.notas,
+                service: editForm.service,
                 updated_at: new Date().toISOString(),
             })
             .eq('id', id);
@@ -71,7 +75,7 @@ export default function DayDetails() {
 
     const handleCancelEdit = () => {
         setEditingId(null);
-        setEditForm({ title: '', description: '', mood: '' });
+        setEditForm({ name: '', phone: '', notas: '', service: '' });
     };
 
     const handleDelete = async (entry: DayEntry) => {
@@ -132,7 +136,7 @@ export default function DayDetails() {
                     isVisible={showConfirmDialog}
                     title="Excluir entrada?"
                     message={`Tem certeza que deseja excluir "${
-                        entryToDelete.title || 'essa entrada'
+                        entryToDelete.name || 'essa entrada'
                     }"?`}
                     onConfirm={() => {
                         handleDelete(entryToDelete);
@@ -215,14 +219,36 @@ export default function DayDetails() {
                                         <div className="space-y-4">
                                             <input
                                                 type="text"
-                                                value={editForm.title}
+                                                value={editForm.name}
                                                 onChange={e =>
                                                     setEditForm({
                                                         ...editForm,
-                                                        title: e.target.value,
+                                                        name: e.target.value,
                                                     })
                                                 }
-                                                placeholder="Title"
+                                                placeholder="Nome"
+                                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
+                                                style={
+                                                    {
+                                                        '--tw-ring-color':
+                                                            colors.background
+                                                                .terciario,
+                                                        borderColor:
+                                                            colors.background
+                                                                .terciario,
+                                                    } as never
+                                                }
+                                            />
+                                            <input
+                                                type="text"
+                                                value={editForm.phone}
+                                                onChange={e =>
+                                                    setEditForm({
+                                                        ...editForm,
+                                                        phone: e.target.value,
+                                                    })
+                                                }
+                                                placeholder="Telefone"
                                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
                                                 style={
                                                     {
@@ -236,11 +262,11 @@ export default function DayDetails() {
                                                 }
                                             />
                                             <select
-                                                value={editForm.mood}
+                                                value={editForm.service}
                                                 onChange={e =>
                                                     setEditForm({
                                                         ...editForm,
-                                                        mood: e.target.value,
+                                                        service: e.target.value,
                                                     })
                                                 }
                                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
@@ -255,50 +281,24 @@ export default function DayDetails() {
                                                     } as never
                                                 }
                                             >
-                                                <option value="">
-                                                    Select a mood...
-                                                </option>
-                                                <option value="Happy">
-                                                    Happy
-                                                </option>
-                                                <option value="Excited">
-                                                    Excited
-                                                </option>
-                                                <option value="Calm">
-                                                    Calm
-                                                </option>
-                                                <option value="Thoughtful">
-                                                    Thoughtful
-                                                </option>
-                                                <option value="Energetic">
-                                                    Energetic
-                                                </option>
-                                                <option value="Relaxed">
-                                                    Relaxed
-                                                </option>
-                                                <option value="Anxious">
-                                                    Anxious
-                                                </option>
-                                                <option value="Tired">
-                                                    Tired
-                                                </option>
-                                                <option value="Grateful">
-                                                    Grateful
-                                                </option>
-                                                <option value="Motivated">
-                                                    Motivated
-                                                </option>
+                                                <option value="">Escolha um serviço...</option>
+                                                <option value="Drenagem linfática">Drenagem linfática</option>
+                                                <option value="Pedras quentes">Pedras quentes</option>
+                                                <option value="Velas terapêuticas">Velas terapêuticas</option>
+                                                <option value="Relaxante">Relaxante</option>
+                                                <option value="Ventosa">Ventosa</option>
+                                                <option value="Massagem">Massagem</option>
                                             </select>
                                             <textarea
-                                                value={editForm.description}
+                                                value={editForm.notas}
                                                 onChange={e =>
                                                     setEditForm({
                                                         ...editForm,
-                                                        description:
+                                                        notas:
                                                             e.target.value,
                                                     })
                                                 }
-                                                placeholder="Description"
+                                                placeholder="Notas"
                                                 rows={4}
                                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none resize-none"
                                                 style={
@@ -351,8 +351,8 @@ export default function DayDetails() {
                                                             .tonsEscuros.escuro,
                                                     }}
                                                 >
-                                                    {entry.title ||
-                                                        'Entrada sem Título'}
+                                                    {entry.name ||
+                                                        'Entrada sem Nome'}
                                                 </h2>
                                                 <div className="flex items-center gap-3">
                                                     <div className="flex items-center gap-2 text-gray-500 text-sm">
@@ -390,7 +390,7 @@ export default function DayDetails() {
                                                 </div>
                                             </div>
 
-                                            {entry.mood && (
+                                            {entry.service && (
                                                 <div className="flex items-center gap-2 mb-3">
                                                     <Smile
                                                         className="w-5 h-5"
@@ -401,15 +401,36 @@ export default function DayDetails() {
                                                         }}
                                                     />
                                                     <span className="text-gray-700 font-medium">
-                                                        Mood: {entry.mood}
+                                                        Serviço: {entry.service}
                                                     </span>
                                                 </div>
                                             )}
 
-                                            {entry.description && (
-                                                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                                                    {entry.description}
-                                                </p>
+                                            {entry.phone && (
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <Phone
+                                                        className="w-5 h-5"
+                                                        style={{
+                                                            color: colors
+                                                                .background
+                                                                .terciario,
+                                                        }}
+                                                    />
+                                                    <span className="text-gray-700 font-medium">
+                                                        Telefone: {entry.phone}
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            {entry.notas && (
+                                                <div className="flex items-start gap-2 mb-3">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" style={{ color: colors.background.terciario }}><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>
+
+                                                    <p className="leading-relaxed whitespace-pre-wrap">
+                                                        <span className="text-gray-700 font-medium">Notas:</span>{' '}
+                                                        <span className="text-gray-600 whitespace-pre-wrap">{entry.notas}</span>
+                                                    </p>
+                                                </div>
                                             )}
                                         </>
                                     )}

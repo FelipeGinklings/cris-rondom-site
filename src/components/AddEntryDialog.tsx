@@ -21,9 +21,10 @@ export default function AddEntryDialog({
     const [date, setDate] = useState(
         initialDate || new Date().toISOString().split('T')[0]
     );
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [mood, setMood] = useState('');
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [notas, setNotas] = useState('');
+    const [service, setService] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -48,20 +49,22 @@ export default function AddEntryDialog({
             const { error: insertError } = await supabase
                 .from('day_entries')
                 .insert([
-                    {
-                        user_id: user?.id,
-                        date,
-                        title,
-                        description,
-                        mood,
-                    },
-                ]);
+                            {
+                                user_id: user?.id,
+                                date,
+                                name,
+                                phone,
+                                notas,
+                                service,
+                            },
+                        ]);
 
             if (insertError) throw insertError;
 
-            setTitle('');
-            setDescription('');
-            setMood('');
+            setName('');
+            setPhone('');
+            setNotas('');
+            setService('');
             onSuccess();
             onClose();
         } catch (err: any) {
@@ -103,7 +106,7 @@ export default function AddEntryDialog({
                             htmlFor="date"
                             className="block text-sm font-semibold text-gray-700 mb-2"
                         >
-                            Date <span className="text-red-500">*</span>
+                            Data <span className="text-red-500">*</span>
                         </label>
                         <input
                             id="date"
@@ -124,17 +127,17 @@ export default function AddEntryDialog({
 
                     <div>
                         <label
-                            htmlFor="title"
+                            htmlFor="name"
                             className="block text-sm font-semibold text-gray-700 mb-2"
                         >
-                            Title
+                            Nome
                         </label>
                         <input
-                            id="title"
-                            type="text"
-                            value={title}
-                            onChange={e => setTitle(e.target.value)}
-                            placeholder="Give your entry a title..."
+                            id="name"
+                                type="text"
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                placeholder="Insira o nome da pessoa..."
                             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
                             style={
                                 {
@@ -148,15 +151,39 @@ export default function AddEntryDialog({
 
                     <div>
                         <label
-                            htmlFor="mood"
+                            htmlFor="phone"
                             className="block text-sm font-semibold text-gray-700 mb-2"
                         >
-                            Mood
+                            Telefone
+                        </label>
+                        <input
+                            id="phone"
+                                type="text"
+                                value={phone}
+                                onChange={e => setPhone(e.target.value)}
+                                placeholder="Insira o telefone da cliente..."
+                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
+                            style={
+                                {
+                                    '--tw-ring-color':
+                                        colors.background.terciario,
+                                    borderColor: colors.background.terciario,
+                                } as any
+                            }
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            htmlFor="service"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                        >
+                            Serviço
                         </label>
                         <select
-                            id="mood"
-                            value={mood}
-                            onChange={e => setMood(e.target.value)}
+                            id="service"
+                                value={service}
+                                onChange={e => setService(e.target.value)}
                             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
                             style={
                                 {
@@ -166,32 +193,28 @@ export default function AddEntryDialog({
                                 } as any
                             }
                         >
-                            <option value="">Select a mood...</option>
-                            <option value="Happy">Happy</option>
-                            <option value="Excited">Excited</option>
-                            <option value="Calm">Calm</option>
-                            <option value="Thoughtful">Thoughtful</option>
-                            <option value="Energetic">Energetic</option>
-                            <option value="Relaxed">Relaxed</option>
-                            <option value="Anxious">Anxious</option>
-                            <option value="Tired">Tired</option>
-                            <option value="Grateful">Grateful</option>
-                            <option value="Motivated">Motivated</option>
+                            <option value="">Escolha um serviço...</option>
+                            <option value="Drenagem linfática">Drenagem linfática</option>
+                            <option value="Pedras quentes">Pedras quentes</option>
+                            <option value="Velas terapêuticas">Velas terapêuticas</option>
+                            <option value="Relaxante">Relaxante</option>
+                            <option value="Ventosa">Ventosa</option>
+                            <option value="Massagem">Massagem</option>
                         </select>
                     </div>
 
                     <div>
                         <label
-                            htmlFor="description"
+                            htmlFor="notas"
                             className="block text-sm font-semibold text-gray-700 mb-2"
                         >
-                            Description
+                            Notas
                         </label>
                         <textarea
-                            id="description"
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            placeholder="What happened today? Share your thoughts, experiences, or reflections..."
+                            id="notas"
+                            value={notas}
+                            onChange={e => setNotas(e.target.value)}
+                            placeholder="Notas adicionais da cliente..."
                             rows={6}
                             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none resize-none"
                             style={

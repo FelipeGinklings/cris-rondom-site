@@ -6,9 +6,10 @@
       - `id` (uuid, primary key) - Unique identifier for each entry
       - `user_id` (uuid, foreign key) - References auth.users
       - `date` (date, required) - The calendar date for this entry
-      - `title` (text) - Entry title
-      - `description` (text) - Detailed description
-      - `mood` (text) - Mood or emotion tag
+      - `name` (text) - Client name
+      - `phone` (text) - Client phone number
+      - `notas` (text) - Notas/observações da entrada
+      - `service` (text) - Service or appointment type
       - `created_at` (timestamptz) - Record creation timestamp
       - `updated_at` (timestamptz) - Record update timestamp
   
@@ -25,13 +26,14 @@
     - Default values provided for timestamps
 */
 
-CREATE TABLE IF NOT EXISTS day_entries (
+CREATE TABLE day_entries (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   date date NOT NULL,
-  title text DEFAULT '',
-  description text DEFAULT '',
-  mood text DEFAULT '',
+  name text DEFAULT '',
+  phone text DEFAULT '',
+  notas text DEFAULT '',
+  service text DEFAULT '',
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
