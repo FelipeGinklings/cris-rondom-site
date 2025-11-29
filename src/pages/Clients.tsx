@@ -10,6 +10,7 @@ import {
     Cake,
     Edit2,
     Trash2,
+    Download,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import AddClientDialog from '../components/AddClientDialog';
@@ -17,6 +18,7 @@ import EditClientDialog from '../components/EditClientDialog';
 import colors from '../constants/colors';
 import ConfirmDialog from '../components/PopUp';
 import useNavigation from '../hooks/useNavigation';
+import { generateClientPDF } from '../lib/pdfGenerator';
 
 interface Client {
     id: string;
@@ -111,6 +113,36 @@ export default function Clients() {
 
     const navigateBackToCalendarHandler = () => {
         navigate('/calendar');
+    };
+
+    const handleDownloadPDF = async (client: Client) => {
+        try {
+            // Fetch all entries for the client
+            const { data: entries } = await supabase
+                .from('day_entries')
+                .select('*')
+                .eq('client_name', client.name)
+                .order('date', { ascending: false });
+
+            // Generate PDF with client data
+            await generateClientPDF({
+                name: client.name,
+                phone: client.phone,
+                email: client.email,
+                birth_date: client.birth_date,
+                address: client.address,
+                entries: (entries || []).map(entry => ({
+                    id: entry.id,
+                    date: entry.date,
+                    title: entry.title || '',
+                    description: entry.description || '',
+                    mood: entry.mood || '',
+                })),
+            });
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Erro ao gerar PDF. Tente novamente.');
+        }
     };
 
     return (
@@ -321,6 +353,21 @@ export default function Clients() {
                                                 </div>
                                             </div>
                                             <div className="flex gap-2">
+                                                <button
+                                                    onClick={() =>
+                                                        handleDownloadPDF(client)
+                                                    }
+                                                    className="p-2 border rounded-lg hover:bg-blue-50 transition-colors"
+                                                    style={{
+                                                        borderColor:
+                                                            colors.background
+                                                                .terciario,
+                                                        color: '#3b82f6',
+                                                    }}
+                                                    title="Baixar histórico em PDF"
+                                                >
+                                                    <Download className="w-4 h-4" />
+                                                </button>
                                                 <button
                                                     onClick={() =>
                                                         handleEdit(client)
