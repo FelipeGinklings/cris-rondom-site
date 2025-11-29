@@ -14,7 +14,7 @@ import colors from '../constants/colors';
 import ConfirmDialog from '../components/PopUp';
 import { DayEntry, supabase } from '../lib/supabase';
 import useNavigation from '../hooks/useNavigation';
-import AddEntryDialog from '../components/AddEntryDialog';
+import AddConsultationDialog from '../components/AddConsultationDialog';
 
 export default function DayDetails() {
     const params = useParams();
@@ -31,7 +31,7 @@ export default function DayDetails() {
     const [entryToDelete, setEntryToDelete] = useState<DayEntry | null>(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const { navigate } = useNavigation();
-    const [isAddOpen, setIsAddOpen] = useState(false);
+    const [isAddConsultationOpen, setIsAddConsultationOpen] = useState(false);
 
     const loadEntries = useCallback(async () => {
         setLoading(true);
@@ -125,9 +125,9 @@ export default function DayDetails() {
                 background: colors.gradiente.suave,
             }}
         >
-            <AddEntryDialog
-                isOpen={isAddOpen}
-                onClose={() => setIsAddOpen(false)}
+            <AddConsultationDialog
+                isOpen={isAddConsultationOpen}
+                onClose={() => setIsAddConsultationOpen(false)}
                 onSuccess={loadEntries}
                 initialDate={date}
             />
@@ -161,17 +161,19 @@ export default function DayDetails() {
                         </span>
                     </button>
 
-                    <button
-                        onClick={() => setIsAddOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-                        style={{
-                            backgroundColor: colors.texto.claro,
-                            color: colors.tonsEscuros.escuro,
-                        }}
-                    >
-                        <Plus className="w-5 h-5" />
-                        Agendar Consulta
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setIsAddConsultationOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                            style={{
+                                backgroundColor: colors.texto.claro,
+                                color: colors.tonsEscuros.escuro,
+                            }}
+                        >
+                            <Plus className="w-5 h-5" />
+                            Agendar Consulta
+                        </button>
+                    </div>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-2xl p-8">
@@ -343,6 +345,7 @@ export default function DayDetails() {
                                         </div>
                                     ) : (
                                         <>
+<<<<<<< Updated upstream
                                             <div className="flex items-center justify-between mb-3">
                                                 <h2
                                                     className="text-2xl font-semibold"
@@ -359,37 +362,158 @@ export default function DayDetails() {
                                                         <Clock className="w-4 h-4" />
                                                         {formatTime(
                                                             entry.created_at
+=======
+                                            {/* Verificar se é uma consulta ou nota */}
+                                            {entry.client_id ? (
+                                                // Layout para Consulta
+                                                <div className="bg-blue-50 rounded-lg p-4">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <div>
+                                                            <h2
+                                                                className="text-2xl font-semibold"
+                                                                style={{
+                                                                    color: colors
+                                                                        .tonsEscuros
+                                                                        .escuro,
+                                                                }}
+                                                            >
+                                                                {entry.title ||
+                                                                    'Consulta sem Título'}
+                                                            </h2>
+                                                            <p className="text-sm text-gray-600 mt-1">
+                                                                💙 Consulta Agendada
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex items-center gap-3">
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleEdit(
+                                                                        entry
+                                                                    )
+                                                                }
+                                                                className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
+                                                                style={{
+                                                                    color: colors
+                                                                        .background
+                                                                        .terciario,
+                                                                }}
+                                                            >
+                                                                <Edit2 className="w-5 h-5" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setEntryToDelete(
+                                                                        entry
+                                                                    );
+                                                                    setShowConfirmDialog(
+                                                                        true
+                                                                    );
+                                                                }}
+                                                                className="p-2 rounded-lg hover:bg-red-100 transition-colors text-red-600"
+                                                            >
+                                                                <Trash2 className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-2 gap-3 text-sm">
+                                                        {entry.client_name && (
+                                                            <div className="font-medium">
+                                                                <span className="text-gray-600">
+                                                                    Cliente:{' '}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        color: colors
+                                                                            .tonsEscuros
+                                                                            .escuro,
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        entry.client_name
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {entry.procedure && (
+                                                            <div className="font-medium">
+                                                                <span className="text-gray-600">
+                                                                    Procedimento:{' '}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        color: colors
+                                                                            .tonsEscuros
+                                                                            .escuro,
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        entry.procedure
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {entry.consultation_type && (
+                                                            <div className="font-medium">
+                                                                <span className="text-gray-600">
+                                                                    Tipo:{' '}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        color: colors
+                                                                            .tonsEscuros
+                                                                            .escuro,
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        entry.consultation_type
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {entry.start_time &&
+                                                            entry.end_time && (
+                                                                <div className="font-medium">
+                                                                    <span className="text-gray-600">
+                                                                        Horário:{' '}
+                                                                    </span>
+                                                                    <span
+                                                                        style={{
+                                                                            color: colors
+                                                                                .tonsEscuros
+                                                                                .escuro,
+                                                                        }}
+                                                                    >
+                                                                        {formatTime(
+                                                                            entry.start_time
+                                                                        )}{' '}
+                                                                        -{' '}
+                                                                        {formatTime(
+                                                                            entry.end_time
+                                                                        )}
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        {entry.address && (
+                                                            <div className="col-span-2 font-medium">
+                                                                <span className="text-gray-600">
+                                                                    Endereço:{' '}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        color: colors
+                                                                            .tonsEscuros
+                                                                            .escuro,
+                                                                    }}
+                                                                >
+                                                                    {entry.address}
+                                                                </span>
+                                                            </div>
+>>>>>>> Stashed changes
                                                         )}
                                                     </div>
-                                                    <button
-                                                        onClick={() =>
-                                                            handleEdit(entry)
-                                                        }
-                                                        className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                                                        style={{
-                                                            color: colors
-                                                                .background
-                                                                .terciario,
-                                                        }}
-                                                    >
-                                                        <Edit2 className="w-5 h-5" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setEntryToDelete(
-                                                                entry
-                                                            );
-                                                            setShowConfirmDialog(
-                                                                true
-                                                            );
-                                                        }}
-                                                        className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-600"
-                                                    >
-                                                        <Trash2 className="w-5 h-5" />
-                                                    </button>
-                                                </div>
-                                            </div>
 
+<<<<<<< Updated upstream
                                             {entry.service && (
                                                 <div className="flex items-center gap-2 mb-3">
                                                     <Smile
@@ -403,9 +527,70 @@ export default function DayDetails() {
                                                     <span className="text-gray-700 font-medium">
                                                         Serviço: {entry.service}
                                                     </span>
+=======
+                                                    {entry.description && (
+                                                        <div className="mt-4 pt-4 border-t border-blue-200">
+                                                            <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                                                                {entry.description}
+                                                            </p>
+                                                        </div>
+                                                    )}
+>>>>>>> Stashed changes
                                                 </div>
-                                            )}
+                                            ) : (
+                                                // Layout para Nota
+                                                <>
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <h2
+                                                            className="text-2xl font-semibold"
+                                                            style={{
+                                                                color: colors
+                                                                    .tonsEscuros
+                                                                    .escuro,
+                                                            }}
+                                                        >
+                                                            {entry.title ||
+                                                                'Entrada sem Título'}
+                                                        </h2>
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="flex items-center gap-2 text-gray-500 text-sm">
+                                                                <Clock className="w-4 h-4" />
+                                                                {formatTime(
+                                                                    entry.created_at
+                                                                )}
+                                                            </div>
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleEdit(
+                                                                        entry
+                                                                    )
+                                                                }
+                                                                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                                                style={{
+                                                                    color: colors
+                                                                        .background
+                                                                        .terciario,
+                                                                }}
+                                                            >
+                                                                <Edit2 className="w-5 h-5" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setEntryToDelete(
+                                                                        entry
+                                                                    );
+                                                                    setShowConfirmDialog(
+                                                                        true
+                                                                    );
+                                                                }}
+                                                                className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-600"
+                                                            >
+                                                                <Trash2 className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
 
+<<<<<<< Updated upstream
                                             {entry.phone && (
                                                 <div className="flex items-center gap-2 mb-3">
                                                     <Phone
@@ -431,6 +616,31 @@ export default function DayDetails() {
                                                         <span className="text-gray-600 whitespace-pre-wrap">{entry.notas}</span>
                                                     </p>
                                                 </div>
+=======
+                                                    {entry.mood && (
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <Smile
+                                                                className="w-5 h-5"
+                                                                style={{
+                                                                    color: colors
+                                                                        .background
+                                                                        .terciario,
+                                                                }}
+                                                            />
+                                                            <span className="text-gray-700 font-medium">
+                                                                Mood:{' '}
+                                                                {entry.mood}
+                                                            </span>
+                                                        </div>
+                                                    )}
+
+                                                    {entry.description && (
+                                                        <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                                                            {entry.description}
+                                                        </p>
+                                                    )}
+                                                </>
+>>>>>>> Stashed changes
                                             )}
                                         </>
                                     )}

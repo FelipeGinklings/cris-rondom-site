@@ -15,4 +15,12 @@ export interface DayEntry {
   service: string;
   created_at: string;
   updated_at: string;
+  // Consultation fields
+  client_id?: string | null;
+  client_name?: string;
+  procedure?: string;
+  consultation_type?: string;
+  address?: string;
+  start_time?: string | null;
+  end_time?: string | null;
 }

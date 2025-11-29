@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, LogOut, Plus, Users } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import AddEntryDialog from '../components/AddEntryDialog';
+import AddConsultationDialog from '../components/AddConsultationDialog';
 import colors from '../constants/colors';
 import { useAuth } from '../hooks/useAuth';
 import useNavigation from '../hooks/useNavigation';
@@ -119,10 +119,10 @@ export default function Calendar() {
                 background: colors.gradiente.suave,
             }}
         >
-            <AddEntryDialog
+            <AddConsultationDialog
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
-                onSuccess={() => {}}
+                onSuccess={() => loadEntries()}
             />
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
