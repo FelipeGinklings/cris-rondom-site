@@ -22,3 +22,21 @@ export interface DayEntry {
     procedure: string;
     client_name: string;
 }
+
+export interface Anamnesis {
+    id: string;
+    user_id: string;
+    client_id: string;
+    title: string;
+    description: string;
+    chief_complaint?: string;
+    medical_history?: string;
+    current_medical_treatment?: string;
+    previous_procedures?: string;
+    medications?: string;
+    recent_symptoms?: string;
+    pain_location?: string;
+    additional_observations?: string;
+    created_at: string;
+    updated_at: string;
+}

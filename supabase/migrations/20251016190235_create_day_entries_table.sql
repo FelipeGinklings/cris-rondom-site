@@ -39,16 +39,13 @@ CREATE TABLE day_entries (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   date date NOT NULL,
-<<<<<<< Updated upstream
   name text DEFAULT '',
   phone text DEFAULT '',
   notas text DEFAULT '',
   service text DEFAULT '',
-=======
   title text DEFAULT '',
   description text DEFAULT '',
  -- mood text DEFAULT '',
->>>>>>> Stashed changes
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
   -- Consultation fields
