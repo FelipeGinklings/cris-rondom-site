@@ -13,7 +13,7 @@ import colors from '../constants/colors';
 import ConfirmDialog from '../components/PopUp';
 import { DayEntry, supabase } from '../lib/supabase';
 import useNavigation from '../hooks/useNavigation';
-import AddConsultationDialog from '../components/AddConsultationDialog';
+import AddConsultationDialog from '../components/AddConsultaDialog';
 
 export default function DayDetails() {
     const params = useParams();
