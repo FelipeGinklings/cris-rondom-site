@@ -25,7 +25,13 @@ interface ClientPDFData {
     }>;
 }
 
-const addSectionTitle = (doc: jsPDF, title: string, yPosition: number, margin: number, pageHeight: number): number => {
+const addSectionTitle = (
+    doc: jsPDF,
+    title: string,
+    yPosition: number,
+    margin: number,
+    pageHeight: number
+): number => {
     if (yPosition > pageHeight - 40) {
         doc.addPage();
         yPosition = 20;
@@ -38,7 +44,13 @@ const addSectionTitle = (doc: jsPDF, title: string, yPosition: number, margin: n
     return yPosition + 6;
 };
 
-const addFieldContent = (doc: jsPDF, content: string | undefined, yPosition: number, margin: number, contentWidth: number): number => {
+const addFieldContent = (
+    doc: jsPDF,
+    content: string | undefined,
+    yPosition: number,
+    margin: number,
+    contentWidth: number
+): number => {
     if (!content || content.trim() === '') {
         return yPosition;
     }
@@ -47,8 +59,8 @@ const addFieldContent = (doc: jsPDF, content: string | undefined, yPosition: num
     doc.setFontSize(9);
     doc.setFont('Helvetica', 'normal');
     doc.text(lines, margin + 10, yPosition);
-    
-    return yPosition + (lines.length * 4) + 3;
+
+    return yPosition + lines.length * 4 + 3;
 };
 
 export const generateClientPDF = async (clientData: ClientPDFData) => {
@@ -79,10 +91,25 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
         { label: 'Nome:', value: clientData.name },
         { label: 'Telefone:', value: clientData.phone || 'N/A' },
         { label: 'Email:', value: clientData.email || 'N/A' },
-        { label: 'Data de Nascimento:', value: clientData.birth_date ? new Date(clientData.birth_date).toLocaleDateString('pt-BR') : 'N/A' },
+        {
+            label: 'Data de Nascimento:',
+            value: clientData.birth_date
+                ? new Date(clientData.birth_date).toLocaleDateString('pt-BR')
+                : 'N/A',
+        },
         { label: 'Endereço:', value: clientData.address || 'N/A' },
-        { label: 'Total de Visitas:', value: clientData.total_entries.toString() },
-        { label: 'Última Visita:', value: clientData.last_entry_date ? new Date(clientData.last_entry_date).toLocaleDateString('pt-BR') : 'N/A' },
+        {
+            label: 'Total de Visitas:',
+            value: clientData.total_entries.toString(),
+        },
+        {
+            label: 'Última Visita:',
+            value: clientData.last_entry_date
+                ? new Date(clientData.last_entry_date).toLocaleDateString(
+                      'pt-BR'
+                  )
+                : 'N/A',
+        },
     ];
 
     clientInfo.forEach(info => {
@@ -116,6 +143,7 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
         doc.text('Anamneses', margin, yPosition);
         yPosition += 12;
 
+        console.log(clientData.anamnesis);
         clientData.anamnesis.forEach((anamnesis, index) => {
             if (yPosition > pageHeight - 30) {
                 doc.addPage();
@@ -126,63 +154,165 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
             doc.setFontSize(11);
             doc.setFont('Helvetica', 'bold');
             doc.setTextColor(0, 0, 0);
-            doc.text(`Anamnese ${index + 1}: ${anamnesis.title}`, margin, yPosition);
+            doc.text(
+                `Anamnese ${index + 1}: ${anamnesis.title}`,
+                margin,
+                yPosition
+            );
             yPosition += 7;
 
             // Data
             doc.setFontSize(9);
             doc.setFont('Helvetica', 'normal');
             doc.setTextColor(100, 100, 100);
-            const anamnesisDate = new Date(anamnesis.created_at).toLocaleDateString('pt-BR');
+            const anamnesisDate = new Date(
+                anamnesis.created_at
+            ).toLocaleDateString('pt-BR');
             doc.text(`Data: ${anamnesisDate}`, margin + 5, yPosition);
             yPosition += 6;
 
             // Queixa Principal
             if (anamnesis.chief_complaint) {
-                yPosition = addSectionTitle(doc, 'Queixa Principal', yPosition, margin, pageHeight);
-                yPosition = addFieldContent(doc, anamnesis.chief_complaint, yPosition, margin, contentWidth);
+                yPosition = addSectionTitle(
+                    doc,
+                    'Queixa Principal',
+                    yPosition,
+                    margin,
+                    pageHeight
+                );
+                yPosition = addFieldContent(
+                    doc,
+                    anamnesis.chief_complaint,
+                    yPosition,
+                    margin,
+                    contentWidth
+                );
             }
 
             // Histórico de Doenças e Lesões
             if (anamnesis.medical_history) {
-                yPosition = addSectionTitle(doc, 'Histórico de Doenças e Lesões', yPosition, margin, pageHeight);
-                yPosition = addFieldContent(doc, anamnesis.medical_history, yPosition, margin, contentWidth);
+                yPosition = addSectionTitle(
+                    doc,
+                    'Histórico de Doenças e Lesões',
+                    yPosition,
+                    margin,
+                    pageHeight
+                );
+                yPosition = addFieldContent(
+                    doc,
+                    anamnesis.medical_history,
+                    yPosition,
+                    margin,
+                    contentWidth
+                );
             }
 
             // Tratamento Médico Atual
             if (anamnesis.current_medical_treatment) {
-                yPosition = addSectionTitle(doc, 'Tratamento Médico Atual', yPosition, margin, pageHeight);
-                yPosition = addFieldContent(doc, anamnesis.current_medical_treatment, yPosition, margin, contentWidth);
+                yPosition = addSectionTitle(
+                    doc,
+                    'Tratamento Médico Atual',
+                    yPosition,
+                    margin,
+                    pageHeight
+                );
+                yPosition = addFieldContent(
+                    doc,
+                    anamnesis.current_medical_treatment,
+                    yPosition,
+                    margin,
+                    contentWidth
+                );
             }
 
             // Procedimentos Anteriores
             if (anamnesis.previous_procedures) {
-                yPosition = addSectionTitle(doc, 'Procedimentos Anteriores', yPosition, margin, pageHeight);
-                yPosition = addFieldContent(doc, anamnesis.previous_procedures, yPosition, margin, contentWidth);
+                yPosition = addSectionTitle(
+                    doc,
+                    'Procedimentos Anteriores',
+                    yPosition,
+                    margin,
+                    pageHeight
+                );
+                yPosition = addFieldContent(
+                    doc,
+                    anamnesis.previous_procedures,
+                    yPosition,
+                    margin,
+                    contentWidth
+                );
             }
 
             // Medicamentos
             if (anamnesis.medications) {
-                yPosition = addSectionTitle(doc, 'Medicamentos', yPosition, margin, pageHeight);
-                yPosition = addFieldContent(doc, anamnesis.medications, yPosition, margin, contentWidth);
+                yPosition = addSectionTitle(
+                    doc,
+                    'Medicamentos',
+                    yPosition,
+                    margin,
+                    pageHeight
+                );
+                yPosition = addFieldContent(
+                    doc,
+                    anamnesis.medications,
+                    yPosition,
+                    margin,
+                    contentWidth
+                );
             }
 
             // Sintomas Recentes
             if (anamnesis.recent_symptoms) {
-                yPosition = addSectionTitle(doc, 'Sintomas Recentes', yPosition, margin, pageHeight);
-                yPosition = addFieldContent(doc, anamnesis.recent_symptoms, yPosition, margin, contentWidth);
+                yPosition = addSectionTitle(
+                    doc,
+                    'Sintomas Recentes',
+                    yPosition,
+                    margin,
+                    pageHeight
+                );
+                yPosition = addFieldContent(
+                    doc,
+                    anamnesis.recent_symptoms,
+                    yPosition,
+                    margin,
+                    contentWidth
+                );
             }
 
             // Região com Dor/Desconforto
             if (anamnesis.pain_location) {
-                yPosition = addSectionTitle(doc, 'Região com Dor/Desconforto', yPosition, margin, pageHeight);
-                yPosition = addFieldContent(doc, anamnesis.pain_location, yPosition, margin, contentWidth);
+                yPosition = addSectionTitle(
+                    doc,
+                    'Região com Dor/Desconforto',
+                    yPosition,
+                    margin,
+                    pageHeight
+                );
+                yPosition = addFieldContent(
+                    doc,
+                    anamnesis.pain_location,
+                    yPosition,
+                    margin,
+                    contentWidth
+                );
             }
 
             // Observações Adicionais
             if (anamnesis.additional_observations) {
-                yPosition = addSectionTitle(doc, 'Observações Adicionais', yPosition, margin, pageHeight);
-                yPosition = addFieldContent(doc, anamnesis.additional_observations, yPosition, margin, contentWidth);
+                yPosition = addSectionTitle(
+                    doc,
+                    'Observações Adicionais',
+                    yPosition,
+                    margin,
+                    pageHeight
+                );
+                yPosition = addFieldContent(
+                    doc,
+                    anamnesis.additional_observations,
+                    yPosition,
+                    margin,
+                    contentWidth
+                );
             }
 
             yPosition += 8;
@@ -196,12 +326,9 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
     const pageCount = (doc as any).internal.pages.length - 1;
     for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
-        doc.text(
-            `Página ${i} de ${pageCount}`,
-            pageWidth / 2,
-            footerY,
-            { align: 'center' }
-        );
+        doc.text(`Página ${i} de ${pageCount}`, pageWidth / 2, footerY, {
+            align: 'center',
+        });
     }
 
     // Salvar PDF

@@ -43,7 +43,8 @@ export default function Clients() {
     const [selectedClient, setSelectedClient] = useState<Client | null>(null);
     const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-    const [selectedClientForAnamnesis, setSelectedClientForAnamnesis] = useState<Client | null>(null);
+    const [selectedClientForAnamnesis, setSelectedClientForAnamnesis] =
+        useState<Client | null>(null);
     const { navigate } = useNavigation();
 
     useEffect(() => {
@@ -87,7 +88,10 @@ export default function Clients() {
                         let nextConsultationDate: string | undefined;
                         let nextConsultationTime: string | undefined;
 
-                        if (futureConsultations && futureConsultations.length > 0) {
+                        if (
+                            futureConsultations &&
+                            futureConsultations.length > 0
+                        ) {
                             nextConsultationDate = futureConsultations[0].date;
                             if (futureConsultations[0].start_time) {
                                 nextConsultationTime = new Date(
@@ -177,7 +181,7 @@ export default function Clients() {
 
     return (
         <div
-            className="min-h-screen p-8"
+            className="min-h-screen p-8 z-30"
             style={{
                 background: colors.gradiente.suave,
             }}
@@ -372,26 +376,45 @@ export default function Clients() {
                                                     </div>
                                                 )}
                                                 {client.next_consultation_date && (
-                                                    <div className="flex items-center gap-2 rounded-lg p-2"
+                                                    <div
+                                                        className="flex items-center gap-2 rounded-lg p-2"
                                                         style={{
-                                                            backgroundColor: colors.background.terciario + '20',
+                                                            backgroundColor:
+                                                                colors
+                                                                    .background
+                                                                    .terciario +
+                                                                '20',
                                                         }}
                                                     >
-                                                        <Calendar className="w-4 h-4"
+                                                        <Calendar
+                                                            className="w-4 h-4"
                                                             style={{
-                                                                color: colors.background.terciario,
+                                                                color: colors
+                                                                    .background
+                                                                    .terciario,
                                                             }}
                                                         />
                                                         <span
                                                             style={{
-                                                                color: colors.tonsEscuros.escuro,
-                                                                fontWeight: '500',
+                                                                color: colors
+                                                                    .tonsEscuros
+                                                                    .escuro,
+                                                                fontWeight:
+                                                                    '500',
                                                             }}
                                                         >
                                                             Próx. atendimento:{' '}
-                                                            {formatDate(client.next_consultation_date)}
+                                                            {formatDate(
+                                                                client.next_consultation_date
+                                                            )}
                                                             {client.next_consultation_time && (
-                                                                <span> às {client.next_consultation_time}</span>
+                                                                <span>
+                                                                    {' '}
+                                                                    às{' '}
+                                                                    {
+                                                                        client.next_consultation_time
+                                                                    }
+                                                                </span>
                                                             )}
                                                         </span>
                                                     </div>
@@ -424,15 +447,19 @@ export default function Clients() {
                                                         className="flex-1 p-2 border rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
                                                         style={{
                                                             borderColor:
-                                                                colors.background
+                                                                colors
+                                                                    .background
                                                                     .terciario,
                                                             color: colors
-                                                                .tonsEscuros.escuro,
+                                                                .tonsEscuros
+                                                                .escuro,
                                                         }}
                                                         title="Editar cliente"
                                                     >
                                                         <Edit2 className="w-4 h-4" />
-                                                        <span className="text-sm font-medium">Editar</span>
+                                                        <span className="text-sm font-medium">
+                                                            Editar
+                                                        </span>
                                                     </button>
                                                     <button
                                                         onClick={() =>
@@ -443,14 +470,17 @@ export default function Clients() {
                                                         className="flex-1 p-2 border rounded-lg hover:bg-green-50 transition-colors flex items-center justify-center gap-2"
                                                         style={{
                                                             borderColor:
-                                                                colors.background
+                                                                colors
+                                                                    .background
                                                                     .terciario,
                                                             color: '#22c55e',
                                                         }}
                                                         title="Gerar PDF"
                                                     >
                                                         <FileText className="w-4 h-4" />
-                                                        <span className="text-sm font-medium">PDF</span>
+                                                        <span className="text-sm font-medium">
+                                                            PDF
+                                                        </span>
                                                     </button>
                                                     <button
                                                         onClick={() =>
@@ -461,15 +491,19 @@ export default function Clients() {
                                                         className="flex-1 p-2 border rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
                                                         style={{
                                                             borderColor:
-                                                                colors.background
+                                                                colors
+                                                                    .background
                                                                     .terciario,
-                                                            color: colors.background
+                                                            color: colors
+                                                                .background
                                                                 .terciario,
                                                         }}
                                                         title="Visualizar anamneses"
                                                     >
                                                         <Eye className="w-4 h-4" />
-                                                        <span className="text-sm font-medium">Anamnese</span>
+                                                        <span className="text-sm font-medium">
+                                                            Anamnese
+                                                        </span>
                                                     </button>
                                                     <button
                                                         onClick={() => {
@@ -484,7 +518,8 @@ export default function Clients() {
                                                         title="Excluir cliente"
                                                         style={{
                                                             borderColor:
-                                                                colors.background
+                                                                colors
+                                                                    .background
                                                                     .terciario,
                                                             color: colors.texto
                                                                 .chamativo,
