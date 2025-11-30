@@ -7,7 +7,6 @@ import { useAuth } from '../hooks/useAuth';
 interface Client {
     id: string;
     name: string;
-    phone: string;
 }
 
 interface AddConsultationDialogProps {
@@ -35,7 +34,6 @@ export default function AddConsultationDialog({
     const [description, setDescription] = useState('');
     const [clientId, setClientId] = useState('');
     const [clientSearch, setClientSearch] = useState('');
-    const [clientPhone, setClientPhone] = useState('');
     const [clients, setClients] = useState<Client[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -51,7 +49,7 @@ export default function AddConsultationDialog({
         try {
             const { data } = await supabase
                 .from('clients')
-                .select('id, name, phone')
+                .select('id, name')
                 .order('name', { ascending: true });
 
             setClients(data || []);
@@ -125,7 +123,6 @@ export default function AddConsultationDialog({
                             description ? `\n\nObs: ${description}` : ''
                         }`,
                         client_id: clientId,
-                        phone: clientPhone,
                         client_name: selectedClientName,
                         procedure,
                         consultation_type: consultationType,
@@ -162,7 +159,6 @@ export default function AddConsultationDialog({
     const handleClientSelect = (client: Client) => {
         setClientId(client.id);
         setClientSearch(client.name);
-        setClientPhone(client.phone);
         setShowClientDropdown(false);
     };
 
