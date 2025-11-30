@@ -153,16 +153,29 @@ export default function Clients() {
             alert('Erro ao excluir cliente. Tente novamente.');
         }
     };
-
-    const handleGeneratePDF = async (client: Client) => {
+const handleGeneratePDF = async (client: Client) => {
         try {
             // Buscar anamneses do cliente
             const { data: anamnesisData } = await supabase
                 .from('anamnesis')
-                .select('id, title, description, created_at')
+                // Adicionamos todos os campos que o generateClientPDF espera receber
+                .select(`
+                    id, 
+                    title, 
+                    description, 
+                    created_at,
+                    chief_complaint,
+                    medical_history,
+                    current_medical_treatment,
+                    previous_procedures,
+                    medications,
+                    recent_symptoms,
+                    pain_location,
+                    additional_observations
+                `)
                 .eq('client_id', client.id)
                 .order('created_at', { ascending: false });
-
+                
             const clientData = {
                 ...client,
                 anamnesis: anamnesisData || [],

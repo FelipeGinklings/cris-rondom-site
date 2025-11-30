@@ -25,6 +25,16 @@ interface ClientPDFData {
     }>;
 }
 
+// Função auxiliar para converter HEX para RGB (para o jsPDF)
+const hexToRgb = (hex: string) => {
+    const cleanHex = hex.replace('#', '');
+    const bigint = parseInt(cleanHex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return { r, g, b };
+};
+
 const addSectionTitle = (
     doc: jsPDF,
     title: string,
@@ -70,21 +80,44 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
         format: 'a4',
     });
 
-    const pageHeight = doc.internal.pageSize.getHeight();
-    let yPosition = 20;
+    // Configurações Globais
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 20;
     const contentWidth = pageWidth - 2 * margin;
+    const primaryColor = hexToRgb(colors.tonsEscuros.escuro || '#000000');
 
-    // Título
-    doc.setFontSize(24);
-    doc.setTextColor(colors.tonsEscuros.escuro.substring(1));
-    doc.text('Ficha do Cliente', margin, yPosition);
+    let yPosition = 0;
 
-    yPosition += 15;
+    // --- CABEÇALHO ---
+    // Fundo colorido do cabeçalho
+    doc.setFillColor(primaryColor.r, primaryColor.g, primaryColor.b);
+    doc.rect(0, 0, pageWidth, 35, 'F');
 
-    // Informações do Cliente
+    // Título Principal (Branco)
+    doc.setFontSize(22);
+    doc.setFont('Helvetica', 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.text('Ficha do Cliente', margin, 22);
+
+    // Data de Geração (Canto direito, menor)
+    doc.setFontSize(9);
+    doc.setFont('Helvetica', 'normal');
+    doc.text(
+        `Gerado em: ${new Date().toLocaleDateString('pt-BR')}`,
+        pageWidth - margin,
+        22,
+        { align: 'right' }
+    );
+
+    yPosition = 50;
+
+    // INFORMAÇÕES DO CLIENTE
     doc.setFontSize(12);
+    doc.setFont('Helvetica', 'bold');
+    doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b);
+    doc.text('Informações do Cliente', margin, yPosition);
+    yPosition += 10;
     doc.setTextColor(0, 0, 0);
 
     const clientInfo = [
@@ -118,60 +151,70 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
             yPosition = 20;
         }
 
+        doc.setFontSize(9);
         doc.setFont('Helvetica', 'bold');
-        doc.text(info.label, margin, yPosition);
+        doc.setTextColor(100, 100, 100);
+        doc.text(info.label.toUpperCase(), margin, yPosition);
 
+        doc.setFontSize(11);
         doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(0, 0, 0);
         const textX = margin + 43;
         const wrappedText = doc.splitTextToSize(info.value, contentWidth - 40);
         doc.text(wrappedText, textX, yPosition);
 
-        yPosition += 8;
+        yPosition += wrappedText.length * 4 + 8;
     });
 
-    // Seção de Anamneses
+    // Linha divisória suave
+    doc.setDrawColor(230, 230, 230);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 15;
+
+    // SEÇÃO DE ANAMNESES
     if (clientData.anamnesis && clientData.anamnesis.length > 0) {
-        yPosition += 10;
-
-        if (yPosition > pageHeight - 40) {
-            doc.addPage();
-            yPosition = 20;
-        }
-
+        // Título da Seção
         doc.setFontSize(14);
         doc.setFont('Helvetica', 'bold');
-        doc.text('Anamneses', margin, yPosition);
-        yPosition += 12;
+        doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b);
+        doc.text('Acompanhamento de sessões', margin, yPosition);
+        yPosition += 15;
 
-        console.log(clientData.anamnesis);
         clientData.anamnesis.forEach((anamnesis, index) => {
-            if (yPosition > pageHeight - 30) {
+            // Verifica quebra de página antes de começar um novo bloco
+            if (yPosition > pageHeight - 50) {
                 doc.addPage();
                 yPosition = 20;
             }
 
-            // Número da anamnese
+            // CABEÇALHO DA ANAMNESE
+            // Fundo cinza claro para o título da anamnese
+            doc.setFillColor(248, 248, 248);
+            doc.rect(margin, yPosition, contentWidth, 12, 'F');
+
+            // Barra lateral colorida
+            doc.setFillColor(primaryColor.r, primaryColor.g, primaryColor.b);
+            doc.rect(margin, yPosition, 2, 12, 'F');
+
+            // Título e Data no cabeçalho cinza
             doc.setFontSize(11);
             doc.setFont('Helvetica', 'bold');
-            doc.setTextColor(0, 0, 0);
-            doc.text(
-                `Anamnese ${index + 1}: ${anamnesis.title}`,
-                margin,
-                yPosition
-            );
-            yPosition += 7;
+            doc.setTextColor(50, 50, 50);
+            doc.text(`${anamnesis.title}`, margin + 5, yPosition + 8);
 
-            // Data
-            doc.setFontSize(9);
-            doc.setFont('Helvetica', 'normal');
-            doc.setTextColor(100, 100, 100);
             const anamnesisDate = new Date(
                 anamnesis.created_at
             ).toLocaleDateString('pt-BR');
-            doc.text(`Data: ${anamnesisDate}`, margin + 5, yPosition);
-            yPosition += 6;
+            doc.setFontSize(9);
+            doc.setFont('Helvetica', 'normal');
+            doc.setTextColor(100, 100, 100);
+            doc.text(anamnesisDate, pageWidth - margin - 5, yPosition + 8, {
+                align: 'right',
+            });
 
-            // Queixa Principal
+            yPosition += 20;
+
+            // Campos da Anamnese usando as funções auxiliares
             if (anamnesis.chief_complaint) {
                 yPosition = addSectionTitle(
                     doc,
@@ -189,7 +232,6 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
                 );
             }
 
-            // Histórico de Doenças e Lesões
             if (anamnesis.medical_history) {
                 yPosition = addSectionTitle(
                     doc,
@@ -207,7 +249,6 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
                 );
             }
 
-            // Tratamento Médico Atual
             if (anamnesis.current_medical_treatment) {
                 yPosition = addSectionTitle(
                     doc,
@@ -225,7 +266,6 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
                 );
             }
 
-            // Procedimentos Anteriores
             if (anamnesis.previous_procedures) {
                 yPosition = addSectionTitle(
                     doc,
@@ -243,7 +283,6 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
                 );
             }
 
-            // Medicamentos
             if (anamnesis.medications) {
                 yPosition = addSectionTitle(
                     doc,
@@ -261,7 +300,6 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
                 );
             }
 
-            // Sintomas Recentes
             if (anamnesis.recent_symptoms) {
                 yPosition = addSectionTitle(
                     doc,
@@ -279,7 +317,6 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
                 );
             }
 
-            // Região com Dor/Desconforto
             if (anamnesis.pain_location) {
                 yPosition = addSectionTitle(
                     doc,
@@ -297,7 +334,6 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
                 );
             }
 
-            // Observações Adicionais
             if (anamnesis.additional_observations) {
                 yPosition = addSectionTitle(
                     doc,
@@ -315,22 +351,29 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
                 );
             }
 
-            yPosition += 8;
+            yPosition += 10; // Espaço extra entre anamneses
         });
     }
 
-    // Footer
-    const footerY = pageHeight - 10;
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
+    // RODAPÉ
     const pageCount = (doc as any).internal.pages.length - 1;
     for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
-        doc.text(`Página ${i} de ${pageCount}`, pageWidth / 2, footerY, {
-            align: 'center',
-        });
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+
+        // Linha fina no rodapé
+        doc.setDrawColor(240, 240, 240);
+        doc.line(margin, pageHeight - 15, pageWidth - margin, pageHeight - 15);
+
+        doc.text(
+            `Página ${i} de ${pageCount} - ${clientData.name}`,
+            pageWidth / 2,
+            pageHeight - 8,
+            { align: 'center' }
+        );
     }
 
     // Salvar PDF
-    doc.save(`ficha_cliente_${clientData.name.replace(/\s+/g, '_')}.pdf`);
+    doc.save(`ficha_${clientData.name.replace(/\s+/g, '_').toLowerCase()}.pdf`);
 };
