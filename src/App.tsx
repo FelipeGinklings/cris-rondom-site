@@ -29,7 +29,8 @@ const ProtectedRoutes = () => {
 
 function AppRoutes() {
     const { user, loading } = useAuth();
-    if (!user) return <Login />;
+
+    if (!user) return <Navigate to="/home" replace />;
 
     if (loading) {
         return (
@@ -47,7 +48,7 @@ function AppRoutes() {
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/calendar/:date" element={<DayDetails />} />
             <Route path="/clients" element={<Clients />} />
-            {/* <Route path="/templates" element={<Template />} /> */}
+            <Route path="/" element={<Navigate to="/calendar" replace />} />
         </Routes>
     );
 }
@@ -57,6 +58,7 @@ function App() {
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
+                    <Route path="/" element={<Navigate to="/home" replace />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/*" element={<ProtectedRoutes />} />
