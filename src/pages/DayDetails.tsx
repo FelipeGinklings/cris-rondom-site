@@ -98,7 +98,7 @@ export default function DayDetails() {
 
     const formatDate = (dateStr: string) => {
         const d = new Date(dateStr + 'T00:00:00');
-        return d.toLocaleDateString('en-US', {
+        return d.toLocaleDateString('pt-BR', {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -107,7 +107,7 @@ export default function DayDetails() {
     };
 
     const formatTime = (timestamp: string) => {
-        return new Date(timestamp).toLocaleTimeString('en-US', {
+        return new Date(timestamp).toLocaleTimeString('pt-BR', {
             hour: '2-digit',
             minute: '2-digit',
         });
