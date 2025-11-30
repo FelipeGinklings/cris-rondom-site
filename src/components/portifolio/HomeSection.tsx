@@ -33,7 +33,7 @@ const HomeSection = () => {
                         >
                             <div className="w-60 h-60 bg-white rounded-full">
                                 <img
-                                    src="/assets/perfil.png"
+                                    src="/assets/perfil.jpeg"
                                     alt="Cris Rondon"
                                     className="w-full h-full rounded-full object-cover"
                                 />
