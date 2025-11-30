@@ -7,6 +7,7 @@ import { useAuth } from '../hooks/useAuth';
 interface Client {
     id: string;
     name: string;
+    phone: string;
 }
 
 interface AddConsultationDialogProps {
@@ -34,6 +35,7 @@ export default function AddConsultationDialog({
     const [description, setDescription] = useState('');
     const [clientId, setClientId] = useState('');
     const [clientSearch, setClientSearch] = useState('');
+    const [clientPhone, setClientPhone] = useState('');
     const [clients, setClients] = useState<Client[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -49,7 +51,7 @@ export default function AddConsultationDialog({
         try {
             const { data } = await supabase
                 .from('clients')
-                .select('id, name')
+                .select('id, name, phone')
                 .order('name', { ascending: true });
 
             setClients(data || []);
@@ -90,7 +92,15 @@ export default function AddConsultationDialog({
         setError('');
 
         // Validar campos obrigatórios
-        if (!date || !procedure || !consultationType || !address || !startTime || !endTime || !clientId) {
+        if (
+            !date ||
+            !procedure ||
+            !consultationType ||
+            !address ||
+            !startTime ||
+            !endTime ||
+            !clientId
+        ) {
             setError('Por favor, preencha todos os campos obrigatórios');
             return;
         }
@@ -99,7 +109,9 @@ export default function AddConsultationDialog({
 
         try {
             // Criar horário completo combinando data e hora
-            const startDateTime = new Date(`${date}T${startTime}`).toISOString();
+            const startDateTime = new Date(
+                `${date}T${startTime}`
+            ).toISOString();
             const endDateTime = new Date(`${date}T${endTime}`).toISOString();
 
             const { error: insertError } = await supabase
@@ -109,9 +121,11 @@ export default function AddConsultationDialog({
                         user_id: user?.id,
                         date,
                         title: `${procedure} - ${selectedClientName}`,
-                        description: `Tipo: ${consultationType}\nEndereço: ${address}\nHorário: ${startTime} - ${endTime}${description ? `\n\nObs: ${description}` : ''}`,
-                        mood: consultationType,
+                        description: `Tipo: ${consultationType}\nEndereço: ${address}\nHorário: ${startTime} - ${endTime}${
+                            description ? `\n\nObs: ${description}` : ''
+                        }`,
                         client_id: clientId,
+                        phone: clientPhone,
                         client_name: selectedClientName,
                         procedure,
                         consultation_type: consultationType,
@@ -135,8 +149,11 @@ export default function AddConsultationDialog({
 
             onSuccess();
             onClose();
-        } catch (err: any) {
-            setError(err.message || 'Erro ao criar atendimento');
+        } catch (err: unknown) {
+            setError(
+                (err as { message: string }).message ||
+                    'Erro ao criar atendimento'
+            );
         } finally {
             setLoading(false);
         }
@@ -145,6 +162,7 @@ export default function AddConsultationDialog({
     const handleClientSelect = (client: Client) => {
         setClientId(client.id);
         setClientSearch(client.name);
+        setClientPhone(client.phone);
         setShowClientDropdown(false);
     };
 
@@ -201,8 +219,9 @@ export default function AddConsultationDialog({
                                     {
                                         '--tw-ring-color':
                                             colors.background.terciario,
-                                        borderColor: colors.background.terciario,
-                                    } as any
+                                        borderColor:
+                                            colors.background.terciario,
+                                    } as unknown as never
                                 }
                             />
                         </div>
@@ -213,7 +232,8 @@ export default function AddConsultationDialog({
                                 htmlFor="procedure"
                                 className="block text-sm font-semibold text-gray-700 mb-2"
                             >
-                                Procedimento <span className="text-red-500">*</span>
+                                Procedimento{' '}
+                                <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="procedure"
@@ -226,8 +246,9 @@ export default function AddConsultationDialog({
                                     {
                                         '--tw-ring-color':
                                             colors.background.terciario,
-                                        borderColor: colors.background.terciario,
-                                    } as any
+                                        borderColor:
+                                            colors.background.terciario,
+                                    } as unknown as never
                                 }
                             />
                         </div>
@@ -238,19 +259,23 @@ export default function AddConsultationDialog({
                                 htmlFor="consultationType"
                                 className="block text-sm font-semibold text-gray-700 mb-2"
                             >
-                                Tipo de Consulta <span className="text-red-500">*</span>
+                                Tipo de Consulta{' '}
+                                <span className="text-red-500">*</span>
                             </label>
                             <select
                                 id="consultationType"
                                 value={consultationType}
-                                onChange={e => setConsultationType(e.target.value)}
+                                onChange={e =>
+                                    setConsultationType(e.target.value)
+                                }
                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
                                 style={
                                     {
                                         '--tw-ring-color':
                                             colors.background.terciario,
-                                        borderColor: colors.background.terciario,
-                                    } as any
+                                        borderColor:
+                                            colors.background.terciario,
+                                    } as unknown as never
                                 }
                             >
                                 <option value="">Selecione...</option>
@@ -271,7 +296,8 @@ export default function AddConsultationDialog({
                                 htmlFor="startTime"
                                 className="block text-sm font-semibold text-gray-700 mb-2"
                             >
-                                Horário de Início <span className="text-red-500">*</span>
+                                Horário de Início{' '}
+                                <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="startTime"
@@ -283,8 +309,9 @@ export default function AddConsultationDialog({
                                     {
                                         '--tw-ring-color':
                                             colors.background.terciario,
-                                        borderColor: colors.background.terciario,
-                                    } as any
+                                        borderColor:
+                                            colors.background.terciario,
+                                    } as unknown as never
                                 }
                             />
                         </div>
@@ -295,7 +322,8 @@ export default function AddConsultationDialog({
                                 htmlFor="endTime"
                                 className="block text-sm font-semibold text-gray-700 mb-2"
                             >
-                                Horário de Fim <span className="text-red-500">*</span>
+                                Horário de Fim{' '}
+                                <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="endTime"
@@ -307,8 +335,9 @@ export default function AddConsultationDialog({
                                     {
                                         '--tw-ring-color':
                                             colors.background.terciario,
-                                        borderColor: colors.background.terciario,
-                                    } as any
+                                        borderColor:
+                                            colors.background.terciario,
+                                    } as unknown as never
                                 }
                             />
                         </div>
@@ -332,8 +361,9 @@ export default function AddConsultationDialog({
                                     {
                                         '--tw-ring-color':
                                             colors.background.terciario,
-                                        borderColor: colors.background.terciario,
-                                    } as any
+                                        borderColor:
+                                            colors.background.terciario,
+                                    } as unknown as never
                                 }
                             />
                         </div>
@@ -363,18 +393,18 @@ export default function AddConsultationDialog({
                                                 colors.background.terciario,
                                             borderColor:
                                                 colors.background.terciario,
-                                        } as any
+                                        } as unknown as never
                                     }
                                 />
 
                                 {/* Dropdown de clientes */}
                                 {showClientDropdown &&
                                     filteredClients.length > 0 && (
-                                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto"
+                                        <div
+                                            className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto"
                                             style={{
                                                 borderColor:
-                                                    colors.background
-                                                        .terciario,
+                                                    colors.background.terciario,
                                             }}
                                         >
                                             {filteredClients.map(client => (
@@ -402,11 +432,11 @@ export default function AddConsultationDialog({
                                 {showClientDropdown &&
                                     clientSearch.trim() &&
                                     filteredClients.length === 0 && (
-                                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg z-10 p-4 text-gray-500 text-sm"
+                                        <div
+                                            className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg z-10 p-4 text-gray-500 text-sm"
                                             style={{
                                                 borderColor:
-                                                    colors.background
-                                                        .terciario,
+                                                    colors.background.terciario,
                                             }}
                                         >
                                             Nenhuma cliente encontrada
@@ -441,8 +471,9 @@ export default function AddConsultationDialog({
                                     {
                                         '--tw-ring-color':
                                             colors.background.terciario,
-                                        borderColor: colors.background.terciario,
-                                    } as any
+                                        borderColor:
+                                            colors.background.terciario,
+                                    } as unknown as never
                                 }
                             />
                         </div>

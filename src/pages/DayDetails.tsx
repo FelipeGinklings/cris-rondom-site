@@ -3,17 +3,16 @@ import {
     Calendar as CalendarIcon,
     Clock,
     Edit2,
-    Smile,
-    Trash2,
     Plus,
+    Trash2,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import colors from '../constants/colors';
-import ConfirmDialog from '../components/PopUp';
-import { DayEntry, supabase } from '../lib/supabase';
-import useNavigation from '../hooks/useNavigation';
 import AddConsultationDialog from '../components/AddConsultationDialog';
+import ConfirmDialog from '../components/PopUp';
+import colors from '../constants/colors';
+import useNavigation from '../hooks/useNavigation';
+import { DayEntry, supabase } from '../lib/supabase';
 
 export default function DayDetails() {
     const params = useParams();
@@ -21,11 +20,11 @@ export default function DayDetails() {
     const [entries, setEntries] = useState<DayEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState<string | null>(null);
-    const [editForm, setEditForm] = useState({
-        name: '',
+    const [editForm, setEditForm] = useState<Partial<DayEntry>>({
+        title: '',
         phone: '',
-        notas: '',
-        service: '',
+        description: '',
+        consultation_type: '',
     });
     const [entryToDelete, setEntryToDelete] = useState<DayEntry | null>(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -47,21 +46,21 @@ export default function DayDetails() {
     const handleEdit = (entry: DayEntry) => {
         setEditingId(entry.id);
         setEditForm({
-            name: entry.name,
+            title: entry.title,
             phone: entry.phone,
-            notas: entry.notas,
-            service: entry.service,
+            description: entry.description,
+            consultation_type: entry.consultation_type,
         });
     };
 
     const handleSaveEdit = async (id: string) => {
         const { error } = await supabase
             .from('day_entries')
-                .update({
-                name: editForm.name,
+            .update({
+                name: editForm.title,
                 phone: editForm.phone,
-                notas: editForm.notas,
-                service: editForm.service,
+                description: editForm.description,
+                consultation_type: editForm.consultation_type,
                 updated_at: new Date().toISOString(),
             })
             .eq('id', id);
@@ -74,7 +73,12 @@ export default function DayDetails() {
 
     const handleCancelEdit = () => {
         setEditingId(null);
-        setEditForm({ name: '', phone: '', notas: '', service: '' });
+        setEditForm({
+            title: '',
+            phone: '',
+            description: '',
+            consultation_type: '',
+        });
     };
 
     const handleDelete = async (entry: DayEntry) => {
@@ -135,7 +139,7 @@ export default function DayDetails() {
                     isVisible={showConfirmDialog}
                     title="Excluir entrada?"
                     message={`Tem certeza que deseja excluir "${
-                        entryToDelete.name || 'essa entrada'
+                        entryToDelete.title || 'essa entrada'
                     }"?`}
                     onConfirm={() => {
                         handleDelete(entryToDelete);
@@ -221,11 +225,11 @@ export default function DayDetails() {
                                         <div className="space-y-4">
                                             <input
                                                 type="text"
-                                                value={editForm.name}
+                                                value={editForm.title}
                                                 onChange={e =>
                                                     setEditForm({
                                                         ...editForm,
-                                                        name: e.target.value,
+                                                        title: e.target.value,
                                                     })
                                                 }
                                                 placeholder="Nome"
@@ -264,11 +268,14 @@ export default function DayDetails() {
                                                 }
                                             />
                                             <select
-                                                value={editForm.service}
+                                                value={
+                                                    editForm.consultation_type
+                                                }
                                                 onChange={e =>
                                                     setEditForm({
                                                         ...editForm,
-                                                        service: e.target.value,
+                                                        consultation_type:
+                                                            e.target.value,
                                                     })
                                                 }
                                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
@@ -283,20 +290,34 @@ export default function DayDetails() {
                                                     } as never
                                                 }
                                             >
-                                                <option value="">Escolha um serviço...</option>
-                                                <option value="Drenagem linfática">Drenagem linfática</option>
-                                                <option value="Pedras quentes">Pedras quentes</option>
-                                                <option value="Velas terapêuticas">Velas terapêuticas</option>
-                                                <option value="Relaxante">Relaxante</option>
-                                                <option value="Ventosa">Ventosa</option>
-                                                <option value="Massagem">Massagem</option>
+                                                <option value="">
+                                                    Escolha um serviço...
+                                                </option>
+                                                <option value="Drenagem linfática">
+                                                    Drenagem linfática
+                                                </option>
+                                                <option value="Pedras quentes">
+                                                    Pedras quentes
+                                                </option>
+                                                <option value="Velas terapêuticas">
+                                                    Velas terapêuticas
+                                                </option>
+                                                <option value="Relaxante">
+                                                    Relaxante
+                                                </option>
+                                                <option value="Ventosa">
+                                                    Ventosa
+                                                </option>
+                                                <option value="Massagem">
+                                                    Massagem
+                                                </option>
                                             </select>
                                             <textarea
-                                                value={editForm.notas}
+                                                value={editForm.description}
                                                 onChange={e =>
                                                     setEditForm({
                                                         ...editForm,
-                                                        notas:
+                                                        description:
                                                             e.target.value,
                                                     })
                                                 }
@@ -363,7 +384,8 @@ export default function DayDetails() {
                                                                     'Consulta sem Título'}
                                                             </h2>
                                                             <p className="text-sm text-gray-600 mt-1">
-                                                                💙 Consulta Agendada
+                                                                💙 Consulta
+                                                                Agendada
                                                             </p>
                                                         </div>
                                                         <div className="flex items-center gap-3">
@@ -488,7 +510,9 @@ export default function DayDetails() {
                                                                             .escuro,
                                                                     }}
                                                                 >
-                                                                    {entry.address}
+                                                                    {
+                                                                        entry.address
+                                                                    }
                                                                 </span>
                                                             </div>
                                                         )}
@@ -497,7 +521,9 @@ export default function DayDetails() {
                                                     {entry.description && (
                                                         <div className="mt-4 pt-4 border-t border-blue-200">
                                                             <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                                                                {entry.description}
+                                                                {
+                                                                    entry.description
+                                                                }
                                                             </p>
                                                         </div>
                                                     )}
@@ -554,24 +580,6 @@ export default function DayDetails() {
                                                             </button>
                                                         </div>
                                                     </div>
-
-                                                    {entry.mood && (
-                                                        <div className="flex items-center gap-2 mb-3">
-                                                            <Smile
-                                                                className="w-5 h-5"
-                                                                style={{
-                                                                    color: colors
-                                                                        .background
-                                                                        .terciario,
-                                                                }}
-                                                            />
-                                                            <span className="text-gray-700 font-medium">
-                                                                Mood:{' '}
-                                                                {entry.mood}
-                                                            </span>
-                                                        </div>
-                                                    )}
-
                                                     {entry.description && (
                                                         <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                                                             {entry.description}
