@@ -95,7 +95,7 @@ export const generateClientPDF = async (clientData: ClientPDFData) => {
         doc.text(info.label, margin, yPosition);
 
         doc.setFont('Helvetica', 'normal');
-        const textX = margin + 40;
+        const textX = margin + 43;
         const wrappedText = doc.splitTextToSize(info.value, contentWidth - 40);
         doc.text(wrappedText, textX, yPosition);
 
