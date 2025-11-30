@@ -5,7 +5,6 @@ import {
     Edit2,
     Smile,
     Trash2,
-    Phone,
     Plus,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -149,6 +148,7 @@ export default function DayDetails() {
                     }}
                 />
             )}
+
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <button
@@ -345,24 +345,6 @@ export default function DayDetails() {
                                         </div>
                                     ) : (
                                         <>
-<<<<<<< Updated upstream
-                                            <div className="flex items-center justify-between mb-3">
-                                                <h2
-                                                    className="text-2xl font-semibold"
-                                                    style={{
-                                                        color: colors
-                                                            .tonsEscuros.escuro,
-                                                    }}
-                                                >
-                                                    {entry.name ||
-                                                        'Entrada sem Nome'}
-                                                </h2>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex items-center gap-2 text-gray-500 text-sm">
-                                                        <Clock className="w-4 h-4" />
-                                                        {formatTime(
-                                                            entry.created_at
-=======
                                             {/* Verificar se é uma consulta ou nota */}
                                             {entry.client_id ? (
                                                 // Layout para Consulta
@@ -509,25 +491,9 @@ export default function DayDetails() {
                                                                     {entry.address}
                                                                 </span>
                                                             </div>
->>>>>>> Stashed changes
                                                         )}
                                                     </div>
 
-<<<<<<< Updated upstream
-                                            {entry.service && (
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <Smile
-                                                        className="w-5 h-5"
-                                                        style={{
-                                                            color: colors
-                                                                .background
-                                                                .terciario,
-                                                        }}
-                                                    />
-                                                    <span className="text-gray-700 font-medium">
-                                                        Serviço: {entry.service}
-                                                    </span>
-=======
                                                     {entry.description && (
                                                         <div className="mt-4 pt-4 border-t border-blue-200">
                                                             <p className="text-sm text-gray-700 whitespace-pre-wrap">
@@ -535,7 +501,6 @@ export default function DayDetails() {
                                                             </p>
                                                         </div>
                                                     )}
->>>>>>> Stashed changes
                                                 </div>
                                             ) : (
                                                 // Layout para Nota
@@ -590,33 +555,6 @@ export default function DayDetails() {
                                                         </div>
                                                     </div>
 
-<<<<<<< Updated upstream
-                                            {entry.phone && (
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <Phone
-                                                        className="w-5 h-5"
-                                                        style={{
-                                                            color: colors
-                                                                .background
-                                                                .terciario,
-                                                        }}
-                                                    />
-                                                    <span className="text-gray-700 font-medium">
-                                                        Telefone: {entry.phone}
-                                                    </span>
-                                                </div>
-                                            )}
-
-                                            {entry.notas && (
-                                                <div className="flex items-start gap-2 mb-3">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" style={{ color: colors.background.terciario }}><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>
-
-                                                    <p className="leading-relaxed whitespace-pre-wrap">
-                                                        <span className="text-gray-700 font-medium">Notas:</span>{' '}
-                                                        <span className="text-gray-600 whitespace-pre-wrap">{entry.notas}</span>
-                                                    </p>
-                                                </div>
-=======
                                                     {entry.mood && (
                                                         <div className="flex items-center gap-2 mb-3">
                                                             <Smile
@@ -640,7 +578,6 @@ export default function DayDetails() {
                                                         </p>
                                                     )}
                                                 </>
->>>>>>> Stashed changes
                                             )}
                                         </>
                                     )}
