@@ -10,7 +10,8 @@ import {
     Cake,
     Edit2,
     Trash2,
-    Download,
+    Eye,
+    FileText,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import AddClientDialog from '../components/AddClientDialog';
@@ -18,7 +19,8 @@ import EditClientDialog from '../components/EditClientDialog';
 import colors from '../constants/colors';
 import ConfirmDialog from '../components/PopUp';
 import useNavigation from '../hooks/useNavigation';
-import { generateClientPDF } from '../lib/pdfGenerator';
+import ViewAnamnesisDialog from '../components/ViewAnamnesisDialog';
+import { generateClientPDF } from '../lib/generatePDF';
 
 interface Client {
     id: string;
@@ -29,6 +31,8 @@ interface Client {
     address?: string;
     total_entries: number;
     last_entry_date?: string;
+    next_consultation_date?: string;
+    next_consultation_time?: string;
 }
 
 export default function Clients() {
@@ -39,6 +43,7 @@ export default function Clients() {
     const [selectedClient, setSelectedClient] = useState<Client | null>(null);
     const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [selectedClientForAnamnesis, setSelectedClientForAnamnesis] = useState<Client | null>(null);
     const { navigate } = useNavigation();
 
     useEffect(() => {
@@ -55,12 +60,44 @@ export default function Clients() {
             if (clientsData) {
                 const clientsWithStats = await Promise.all(
                     clientsData.map(async client => {
-                        const { data: entries, count } = await supabase
+                        // Buscar número de atendimentos
+                        const { count } = await supabase
                             .from('day_entries')
                             .select('date', { count: 'exact' })
+                            .eq('client_name', client.name);
+
+                        // Buscar última visita
+                        const { data: entries } = await supabase
+                            .from('day_entries')
+                            .select('date')
                             .eq('client_name', client.name)
                             .order('date', { ascending: false })
                             .limit(1);
+
+                        // Buscar próximo atendimento agendado
+                        const today = new Date().toISOString().split('T')[0];
+                        const { data: futureConsultations } = await supabase
+                            .from('day_entries')
+                            .select('date, start_time')
+                            .eq('client_id', client.id)
+                            .gte('date', today)
+                            .order('date', { ascending: true })
+                            .limit(1);
+
+                        let nextConsultationDate: string | undefined;
+                        let nextConsultationTime: string | undefined;
+
+                        if (futureConsultations && futureConsultations.length > 0) {
+                            nextConsultationDate = futureConsultations[0].date;
+                            if (futureConsultations[0].start_time) {
+                                nextConsultationTime = new Date(
+                                    futureConsultations[0].start_time
+                                ).toLocaleTimeString('pt-BR', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                });
+                            }
+                        }
 
                         return {
                             id: client.id,
@@ -71,6 +108,8 @@ export default function Clients() {
                             address: client.address,
                             total_entries: count || 0,
                             last_entry_date: entries?.[0]?.date,
+                            next_consultation_date: nextConsultationDate,
+                            next_consultation_time: nextConsultationTime,
                         };
                     })
                 );
@@ -111,38 +150,29 @@ export default function Clients() {
         }
     };
 
-    const navigateBackToCalendarHandler = () => {
-        navigate('/calendar');
-    };
-
-    const handleDownloadPDF = async (client: Client) => {
+    const handleGeneratePDF = async (client: Client) => {
         try {
-            // Fetch all entries for the client
-            const { data: entries } = await supabase
-                .from('day_entries')
-                .select('*')
-                .eq('client_name', client.name)
-                .order('date', { ascending: false });
+            // Buscar anamneses do cliente
+            const { data: anamnesisData } = await supabase
+                .from('anamnesis')
+                .select('id, title, description, created_at')
+                .eq('client_id', client.id)
+                .order('created_at', { ascending: false });
 
-            // Generate PDF with client data
-            await generateClientPDF({
-                name: client.name,
-                phone: client.phone,
-                email: client.email,
-                birth_date: client.birth_date,
-                address: client.address,
-                entries: (entries || []).map(entry => ({
-                    id: entry.id,
-                    date: entry.date,
-                    title: entry.title || '',
-                    description: entry.description || '',
-                    mood: entry.mood || '',
-                })),
-            });
+            const clientData = {
+                ...client,
+                anamnesis: anamnesisData || [],
+            };
+
+            generateClientPDF(clientData);
         } catch (error) {
-            console.error('Error generating PDF:', error);
+            console.error('Erro ao gerar PDF:', error);
             alert('Erro ao gerar PDF. Tente novamente.');
         }
+    };
+
+    const navigateBackToCalendarHandler = () => {
+        navigate('/calendar');
     };
 
     return (
@@ -166,6 +196,14 @@ export default function Clients() {
                 onSuccess={loadClients}
                 client={selectedClient}
             />
+            {selectedClientForAnamnesis && (
+                <ViewAnamnesisDialog
+                    isOpen={!!selectedClientForAnamnesis}
+                    onClose={() => setSelectedClientForAnamnesis(null)}
+                    clientId={selectedClientForAnamnesis.id}
+                    clientName={selectedClientForAnamnesis.name}
+                />
+            )}
             {clientToDelete && (
                 <ConfirmDialog
                     isVisible={showConfirmDialog}
@@ -333,6 +371,31 @@ export default function Clients() {
                                                         </span>
                                                     </div>
                                                 )}
+                                                {client.next_consultation_date && (
+                                                    <div className="flex items-center gap-2 rounded-lg p-2"
+                                                        style={{
+                                                            backgroundColor: colors.background.terciario + '20',
+                                                        }}
+                                                    >
+                                                        <Calendar className="w-4 h-4"
+                                                            style={{
+                                                                color: colors.background.terciario,
+                                                            }}
+                                                        />
+                                                        <span
+                                                            style={{
+                                                                color: colors.tonsEscuros.escuro,
+                                                                fontWeight: '500',
+                                                            }}
+                                                        >
+                                                            Próx. atendimento:{' '}
+                                                            {formatDate(client.next_consultation_date)}
+                                                            {client.next_consultation_time && (
+                                                                <span> às {client.next_consultation_time}</span>
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="flex flex-col items-end gap-4">
@@ -352,59 +415,84 @@ export default function Clients() {
                                                         : 'visitas'}
                                                 </div>
                                             </div>
-                                            <div className="flex gap-2">
-                                                <button
-                                                    onClick={() =>
-                                                        handleDownloadPDF(client)
-                                                    }
-                                                    className="p-2 border rounded-lg hover:bg-blue-50 transition-colors"
-                                                    style={{
-                                                        borderColor:
-                                                            colors.background
+                                            <div className="flex flex-col gap-2 w-full">
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() =>
+                                                            handleEdit(client)
+                                                        }
+                                                        className="flex-1 p-2 border rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                                                        style={{
+                                                            borderColor:
+                                                                colors.background
+                                                                    .terciario,
+                                                            color: colors
+                                                                .tonsEscuros.escuro,
+                                                        }}
+                                                        title="Editar cliente"
+                                                    >
+                                                        <Edit2 className="w-4 h-4" />
+                                                        <span className="text-sm font-medium">Editar</span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            handleGeneratePDF(
+                                                                client
+                                                            )
+                                                        }
+                                                        className="flex-1 p-2 border rounded-lg hover:bg-green-50 transition-colors flex items-center justify-center gap-2"
+                                                        style={{
+                                                            borderColor:
+                                                                colors.background
+                                                                    .terciario,
+                                                            color: '#22c55e',
+                                                        }}
+                                                        title="Gerar PDF"
+                                                    >
+                                                        <FileText className="w-4 h-4" />
+                                                        <span className="text-sm font-medium">PDF</span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            setSelectedClientForAnamnesis(
+                                                                client
+                                                            )
+                                                        }
+                                                        className="flex-1 p-2 border rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+                                                        style={{
+                                                            borderColor:
+                                                                colors.background
+                                                                    .terciario,
+                                                            color: colors.background
                                                                 .terciario,
-                                                        color: '#3b82f6',
-                                                    }}
-                                                    title="Baixar histórico em PDF"
-                                                >
-                                                    <Download className="w-4 h-4" />
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        handleEdit(client)
-                                                    }
-                                                    className="p-2 border rounded-lg hover:bg-gray-50 transition-colors"
-                                                    style={{
-                                                        borderColor:
-                                                            colors.background
-                                                                .terciario,
-                                                        color: colors
-                                                            .tonsEscuros.escuro,
-                                                    }}
-                                                    title="Editar cliente"
-                                                >
-                                                    <Edit2 className="w-4 h-4" />
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        setClientToDelete(
-                                                            client
-                                                        );
-                                                        setShowConfirmDialog(
-                                                            true
-                                                        );
-                                                    }}
-                                                    className="p-2 border rounded-lg hover:bg-red-50 transition-colors"
-                                                    title="Excluir cliente"
-                                                    style={{
-                                                        borderColor:
-                                                            colors.background
-                                                                .terciario,
-                                                        color: colors.texto
-                                                            .chamativo,
-                                                    }}
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
+                                                        }}
+                                                        title="Visualizar anamneses"
+                                                    >
+                                                        <Eye className="w-4 h-4" />
+                                                        <span className="text-sm font-medium">Anamnese</span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setClientToDelete(
+                                                                client
+                                                            );
+                                                            setShowConfirmDialog(
+                                                                true
+                                                            );
+                                                        }}
+                                                        className="p-2 border rounded-lg hover:bg-red-50 transition-colors"
+                                                        title="Excluir cliente"
+                                                        style={{
+                                                            borderColor:
+                                                                colors.background
+                                                                    .terciario,
+                                                            color: colors.texto
+                                                                .chamativo,
+                                                        }}
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

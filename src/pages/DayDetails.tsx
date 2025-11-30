@@ -13,7 +13,7 @@ import colors from '../constants/colors';
 import ConfirmDialog from '../components/PopUp';
 import { DayEntry, supabase } from '../lib/supabase';
 import useNavigation from '../hooks/useNavigation';
-import AddEntryDialog from '../components/AddEntryDialog';
+import AddConsultationDialog from '../components/AddConsultationDialog';
 
 export default function DayDetails() {
     const params = useParams();
@@ -22,14 +22,15 @@ export default function DayDetails() {
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editForm, setEditForm] = useState({
-        title: '',
-        description: '',
-        mood: '',
+        name: '',
+        phone: '',
+        notas: '',
+        service: '',
     });
     const [entryToDelete, setEntryToDelete] = useState<DayEntry | null>(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const { navigate } = useNavigation();
-    const [isAddOpen, setIsAddOpen] = useState(false);
+    const [isAddConsultationOpen, setIsAddConsultationOpen] = useState(false);
 
     const loadEntries = useCallback(async () => {
         setLoading(true);
@@ -46,19 +47,21 @@ export default function DayDetails() {
     const handleEdit = (entry: DayEntry) => {
         setEditingId(entry.id);
         setEditForm({
-            title: entry.title,
-            description: entry.description,
-            mood: entry.mood,
+            name: entry.name,
+            phone: entry.phone,
+            notas: entry.notas,
+            service: entry.service,
         });
     };
 
     const handleSaveEdit = async (id: string) => {
         const { error } = await supabase
             .from('day_entries')
-            .update({
-                title: editForm.title,
-                description: editForm.description,
-                mood: editForm.mood,
+                .update({
+                name: editForm.name,
+                phone: editForm.phone,
+                notas: editForm.notas,
+                service: editForm.service,
                 updated_at: new Date().toISOString(),
             })
             .eq('id', id);
@@ -71,7 +74,7 @@ export default function DayDetails() {
 
     const handleCancelEdit = () => {
         setEditingId(null);
-        setEditForm({ title: '', description: '', mood: '' });
+        setEditForm({ name: '', phone: '', notas: '', service: '' });
     };
 
     const handleDelete = async (entry: DayEntry) => {
@@ -121,9 +124,9 @@ export default function DayDetails() {
                 background: colors.gradiente.suave,
             }}
         >
-            <AddEntryDialog
-                isOpen={isAddOpen}
-                onClose={() => setIsAddOpen(false)}
+            <AddConsultationDialog
+                isOpen={isAddConsultationOpen}
+                onClose={() => setIsAddConsultationOpen(false)}
                 onSuccess={loadEntries}
                 initialDate={date}
             />
@@ -132,7 +135,7 @@ export default function DayDetails() {
                     isVisible={showConfirmDialog}
                     title="Excluir entrada?"
                     message={`Tem certeza que deseja excluir "${
-                        entryToDelete.title || 'essa entrada'
+                        entryToDelete.name || 'essa entrada'
                     }"?`}
                     onConfirm={() => {
                         handleDelete(entryToDelete);
@@ -157,17 +160,19 @@ export default function DayDetails() {
                         </span>
                     </button>
 
-                    <button
-                        onClick={() => setIsAddOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-                        style={{
-                            backgroundColor: colors.texto.claro,
-                            color: colors.tonsEscuros.escuro,
-                        }}
-                    >
-                        <Plus className="w-5 h-5" />
-                        Agendar Consulta
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setIsAddConsultationOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                            style={{
+                                backgroundColor: colors.texto.claro,
+                                color: colors.tonsEscuros.escuro,
+                            }}
+                        >
+                            <Plus className="w-5 h-5" />
+                            Agendar Consulta
+                        </button>
+                    </div>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-2xl p-8">
@@ -215,14 +220,36 @@ export default function DayDetails() {
                                         <div className="space-y-4">
                                             <input
                                                 type="text"
-                                                value={editForm.title}
+                                                value={editForm.name}
                                                 onChange={e =>
                                                     setEditForm({
                                                         ...editForm,
-                                                        title: e.target.value,
+                                                        name: e.target.value,
                                                     })
                                                 }
-                                                placeholder="Title"
+                                                placeholder="Nome"
+                                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
+                                                style={
+                                                    {
+                                                        '--tw-ring-color':
+                                                            colors.background
+                                                                .terciario,
+                                                        borderColor:
+                                                            colors.background
+                                                                .terciario,
+                                                    } as never
+                                                }
+                                            />
+                                            <input
+                                                type="text"
+                                                value={editForm.phone}
+                                                onChange={e =>
+                                                    setEditForm({
+                                                        ...editForm,
+                                                        phone: e.target.value,
+                                                    })
+                                                }
+                                                placeholder="Telefone"
                                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
                                                 style={
                                                     {
@@ -236,11 +263,11 @@ export default function DayDetails() {
                                                 }
                                             />
                                             <select
-                                                value={editForm.mood}
+                                                value={editForm.service}
                                                 onChange={e =>
                                                     setEditForm({
                                                         ...editForm,
-                                                        mood: e.target.value,
+                                                        service: e.target.value,
                                                     })
                                                 }
                                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
@@ -255,50 +282,24 @@ export default function DayDetails() {
                                                     } as never
                                                 }
                                             >
-                                                <option value="">
-                                                    Select a mood...
-                                                </option>
-                                                <option value="Happy">
-                                                    Happy
-                                                </option>
-                                                <option value="Excited">
-                                                    Excited
-                                                </option>
-                                                <option value="Calm">
-                                                    Calm
-                                                </option>
-                                                <option value="Thoughtful">
-                                                    Thoughtful
-                                                </option>
-                                                <option value="Energetic">
-                                                    Energetic
-                                                </option>
-                                                <option value="Relaxed">
-                                                    Relaxed
-                                                </option>
-                                                <option value="Anxious">
-                                                    Anxious
-                                                </option>
-                                                <option value="Tired">
-                                                    Tired
-                                                </option>
-                                                <option value="Grateful">
-                                                    Grateful
-                                                </option>
-                                                <option value="Motivated">
-                                                    Motivated
-                                                </option>
+                                                <option value="">Escolha um serviço...</option>
+                                                <option value="Drenagem linfática">Drenagem linfática</option>
+                                                <option value="Pedras quentes">Pedras quentes</option>
+                                                <option value="Velas terapêuticas">Velas terapêuticas</option>
+                                                <option value="Relaxante">Relaxante</option>
+                                                <option value="Ventosa">Ventosa</option>
+                                                <option value="Massagem">Massagem</option>
                                             </select>
                                             <textarea
-                                                value={editForm.description}
+                                                value={editForm.notas}
                                                 onChange={e =>
                                                     setEditForm({
                                                         ...editForm,
-                                                        description:
+                                                        notas:
                                                             e.target.value,
                                                     })
                                                 }
-                                                placeholder="Description"
+                                                placeholder="Notas"
                                                 rows={4}
                                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none resize-none"
                                                 style={
@@ -343,73 +344,239 @@ export default function DayDetails() {
                                         </div>
                                     ) : (
                                         <>
-                                            <div className="flex items-center justify-between mb-3">
-                                                <h2
-                                                    className="text-2xl font-semibold"
-                                                    style={{
-                                                        color: colors
-                                                            .tonsEscuros.escuro,
-                                                    }}
-                                                >
-                                                    {entry.title ||
-                                                        'Entrada sem Título'}
-                                                </h2>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex items-center gap-2 text-gray-500 text-sm">
-                                                        <Clock className="w-4 h-4" />
-                                                        {formatTime(
-                                                            entry.created_at
+                                            {/* Verificar se é uma consulta ou nota */}
+                                            {entry.client_id ? (
+                                                // Layout para Consulta
+                                                <div className="bg-blue-50 rounded-lg p-4">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <div>
+                                                            <h2
+                                                                className="text-2xl font-semibold"
+                                                                style={{
+                                                                    color: colors
+                                                                        .tonsEscuros
+                                                                        .escuro,
+                                                                }}
+                                                            >
+                                                                {entry.title ||
+                                                                    'Consulta sem Título'}
+                                                            </h2>
+                                                            <p className="text-sm text-gray-600 mt-1">
+                                                                💙 Consulta Agendada
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex items-center gap-3">
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleEdit(
+                                                                        entry
+                                                                    )
+                                                                }
+                                                                className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
+                                                                style={{
+                                                                    color: colors
+                                                                        .background
+                                                                        .terciario,
+                                                                }}
+                                                            >
+                                                                <Edit2 className="w-5 h-5" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setEntryToDelete(
+                                                                        entry
+                                                                    );
+                                                                    setShowConfirmDialog(
+                                                                        true
+                                                                    );
+                                                                }}
+                                                                className="p-2 rounded-lg hover:bg-red-100 transition-colors text-red-600"
+                                                            >
+                                                                <Trash2 className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-2 gap-3 text-sm">
+                                                        {entry.client_name && (
+                                                            <div className="font-medium">
+                                                                <span className="text-gray-600">
+                                                                    Cliente:{' '}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        color: colors
+                                                                            .tonsEscuros
+                                                                            .escuro,
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        entry.client_name
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {entry.procedure && (
+                                                            <div className="font-medium">
+                                                                <span className="text-gray-600">
+                                                                    Procedimento:{' '}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        color: colors
+                                                                            .tonsEscuros
+                                                                            .escuro,
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        entry.procedure
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {entry.consultation_type && (
+                                                            <div className="font-medium">
+                                                                <span className="text-gray-600">
+                                                                    Tipo:{' '}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        color: colors
+                                                                            .tonsEscuros
+                                                                            .escuro,
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        entry.consultation_type
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {entry.start_time &&
+                                                            entry.end_time && (
+                                                                <div className="font-medium">
+                                                                    <span className="text-gray-600">
+                                                                        Horário:{' '}
+                                                                    </span>
+                                                                    <span
+                                                                        style={{
+                                                                            color: colors
+                                                                                .tonsEscuros
+                                                                                .escuro,
+                                                                        }}
+                                                                    >
+                                                                        {formatTime(
+                                                                            entry.start_time
+                                                                        )}{' '}
+                                                                        -{' '}
+                                                                        {formatTime(
+                                                                            entry.end_time
+                                                                        )}
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        {entry.address && (
+                                                            <div className="col-span-2 font-medium">
+                                                                <span className="text-gray-600">
+                                                                    Endereço:{' '}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        color: colors
+                                                                            .tonsEscuros
+                                                                            .escuro,
+                                                                    }}
+                                                                >
+                                                                    {entry.address}
+                                                                </span>
+                                                            </div>
                                                         )}
                                                     </div>
-                                                    <button
-                                                        onClick={() =>
-                                                            handleEdit(entry)
-                                                        }
-                                                        className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                                                        style={{
-                                                            color: colors
-                                                                .background
-                                                                .terciario,
-                                                        }}
-                                                    >
-                                                        <Edit2 className="w-5 h-5" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setEntryToDelete(
-                                                                entry
-                                                            );
-                                                            setShowConfirmDialog(
-                                                                true
-                                                            );
-                                                        }}
-                                                        className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-600"
-                                                    >
-                                                        <Trash2 className="w-5 h-5" />
-                                                    </button>
-                                                </div>
-                                            </div>
 
-                                            {entry.mood && (
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <Smile
-                                                        className="w-5 h-5"
-                                                        style={{
-                                                            color: colors
-                                                                .background
-                                                                .terciario,
-                                                        }}
-                                                    />
-                                                    <span className="text-gray-700 font-medium">
-                                                        Mood: {entry.mood}
-                                                    </span>
+                                                    {entry.description && (
+                                                        <div className="mt-4 pt-4 border-t border-blue-200">
+                                                            <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                                                                {entry.description}
+                                                            </p>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
+                                            ) : (
+                                                // Layout para Nota
+                                                <>
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <h2
+                                                            className="text-2xl font-semibold"
+                                                            style={{
+                                                                color: colors
+                                                                    .tonsEscuros
+                                                                    .escuro,
+                                                            }}
+                                                        >
+                                                            {entry.title ||
+                                                                'Entrada sem Título'}
+                                                        </h2>
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="flex items-center gap-2 text-gray-500 text-sm">
+                                                                <Clock className="w-4 h-4" />
+                                                                {formatTime(
+                                                                    entry.created_at
+                                                                )}
+                                                            </div>
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleEdit(
+                                                                        entry
+                                                                    )
+                                                                }
+                                                                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                                                style={{
+                                                                    color: colors
+                                                                        .background
+                                                                        .terciario,
+                                                                }}
+                                                            >
+                                                                <Edit2 className="w-5 h-5" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setEntryToDelete(
+                                                                        entry
+                                                                    );
+                                                                    setShowConfirmDialog(
+                                                                        true
+                                                                    );
+                                                                }}
+                                                                className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-600"
+                                                            >
+                                                                <Trash2 className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
 
-                                            {entry.description && (
-                                                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                                                    {entry.description}
-                                                </p>
+                                                    {entry.mood && (
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <Smile
+                                                                className="w-5 h-5"
+                                                                style={{
+                                                                    color: colors
+                                                                        .background
+                                                                        .terciario,
+                                                                }}
+                                                            />
+                                                            <span className="text-gray-700 font-medium">
+                                                                Mood:{' '}
+                                                                {entry.mood}
+                                                            </span>
+                                                        </div>
+                                                    )}
+
+                                                    {entry.description && (
+                                                        <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                                                            {entry.description}
+                                                        </p>
+                                                    )}
+                                                </>
                                             )}
                                         </>
                                     )}
