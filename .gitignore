@@ -23,3 +23,8 @@ dist-ssr
 .env
 .bolt
 .vscode
+
+.env
+.env.local
+.env.production
+.env.development
