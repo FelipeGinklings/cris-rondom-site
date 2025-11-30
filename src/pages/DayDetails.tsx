@@ -22,7 +22,6 @@ export default function DayDetails() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editForm, setEditForm] = useState<Partial<DayEntry>>({
         title: '',
-        phone: '',
         description: '',
         consultation_type: '',
     });
@@ -47,7 +46,6 @@ export default function DayDetails() {
         setEditingId(entry.id);
         setEditForm({
             title: entry.title,
-            phone: entry.phone,
             description: entry.description,
             consultation_type: entry.consultation_type,
         });
@@ -58,7 +56,6 @@ export default function DayDetails() {
             .from('day_entries')
             .update({
                 name: editForm.title,
-                phone: editForm.phone,
                 description: editForm.description,
                 consultation_type: editForm.consultation_type,
                 updated_at: new Date().toISOString(),
@@ -75,7 +72,6 @@ export default function DayDetails() {
         setEditingId(null);
         setEditForm({
             title: '',
-            phone: '',
             description: '',
             consultation_type: '',
         });
@@ -233,28 +229,6 @@ export default function DayDetails() {
                                                     })
                                                 }
                                                 placeholder="Nome"
-                                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
-                                                style={
-                                                    {
-                                                        '--tw-ring-color':
-                                                            colors.background
-                                                                .terciario,
-                                                        borderColor:
-                                                            colors.background
-                                                                .terciario,
-                                                    } as never
-                                                }
-                                            />
-                                            <input
-                                                type="text"
-                                                value={editForm.phone}
-                                                onChange={e =>
-                                                    setEditForm({
-                                                        ...editForm,
-                                                        phone: e.target.value,
-                                                    })
-                                                }
-                                                placeholder="Telefone"
                                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none"
                                                 style={
                                                     {
